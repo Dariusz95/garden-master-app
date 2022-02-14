@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import home from "../components/home";
 import fame from "../components/fame";
+import addForm from "../components/addForm";
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,11 @@ const routes = [
     path: "/fame",
     name: "fame",
     component: fame,
+  },
+  {
+    path: "/add",
+    name: "addForm",
+    component: addForm,
   },
 ];
 

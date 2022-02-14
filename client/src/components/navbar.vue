@@ -8,6 +8,9 @@
       <router-link class="navbar__items-item" to="/fame" tag="span">
         <span>Hala sław </span>
       </router-link>
+      <router-link class="navbar__items-item" to="/add" tag="span">
+        <span>Pochwal się</span>
+      </router-link>
     </div>
 
     <div class="navbar__btn">
@@ -32,7 +35,8 @@ export default {
   width: 100vw;
   display: flex;
   justify-content: space-between;
-  background-color: $base-color;
+  // background-color: $base-color;
+  z-index: 10;
   &__logo {
   }
   &__items {
