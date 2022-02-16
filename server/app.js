@@ -5,18 +5,14 @@ const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-require("./db/mongoose");
-
-// mongoose.connect(
-//   "mongodb+srv://darek95:garden12@cluster0.8dsff.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-//   {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   }
-// );
-
 app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 app.use(cors());
+require("./db/mongoose");
 
 app.use("/api", apiRouter);
 

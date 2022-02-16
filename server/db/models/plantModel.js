@@ -1,8 +1,7 @@
-// import mongoose from "mongoose";
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const plantSchema = new mongoose.Schema({
+const plantSchema = new Schema({
   kind: {
     type: String,
     required: [true, "Kind is required"],
