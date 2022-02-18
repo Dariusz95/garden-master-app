@@ -21,7 +21,6 @@ const userSchema = new Schema({
     type: String,
     trim: true,
     required: true,
-    select: false,
   },
   role: {
     type: String,
@@ -42,7 +41,8 @@ userSchema.pre("save", function (next) {
 
 userSchema.methods = {
   comparePassword(password) {
-    return bcrypt.compareSync(password, this.password);
+    let isCompare = bcrypt.compareSync(password, this.password);
+    return isCompare;
   },
 };
 
