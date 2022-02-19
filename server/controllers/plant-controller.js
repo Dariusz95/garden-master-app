@@ -7,6 +7,7 @@ class PlantController {
       tips: req.body.tips,
       type: req.body.type,
       owner: req.user.id,
+      image: req.file.filename,
     });
 
     plant

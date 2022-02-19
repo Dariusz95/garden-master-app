@@ -13,6 +13,10 @@ const plantSchema = new Schema({
   tips: {
     type: String,
   },
+  image: {
+    type: String,
+    required: true,
+  },
   owner: {
     type: mongoose.Types.ObjectId,
     required: true,

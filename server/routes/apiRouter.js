@@ -7,6 +7,8 @@ const UserController = require("../controllers/user-controller");
 const plantController = require("../controllers/plant-controller");
 const CommentController = require("../controllers/comment-controller");
 
+const imageService = require("../services/imageService");
+
 router.post("/register", UserController.register);
 router.post("/login", UserController.login);
 
@@ -19,6 +21,11 @@ router.get("/admin", isAuth, (req, res) => {
 router.post("/comment", isAuth, CommentController.create);
 
 router.get("/plant", plantController.showAll);
-router.post("/plant", isAuth, plantController.create);
+router.post(
+  "/plant",
+  imageService.single("image"),
+  isAuth,
+  plantController.create
+);
 
 module.exports = router;
