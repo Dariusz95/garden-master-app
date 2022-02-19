@@ -5,6 +5,7 @@ const isAuth = require("../middleware/authMiddleware");
 
 const UserController = require("../controllers/user-controller");
 const plantController = require("../controllers/plant-controller");
+const CommentController = require("../controllers/comment-controller");
 
 router.post("/register", UserController.register);
 router.post("/login", UserController.login);
@@ -15,10 +16,9 @@ router.get("/admin", isAuth, (req, res) => {
   res.send("witoj");
 });
 
-router.post("/plants", plantController.create);
+router.post("/comment", isAuth, CommentController.create);
 
-router.get("/plants", (req, res) => {
-  res.send("asdsa");
-});
+router.get("/plant", plantController.showAll);
+router.post("/plant", isAuth, plantController.create);
 
 module.exports = router;

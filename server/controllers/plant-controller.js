@@ -5,6 +5,8 @@ class PlantController {
     const plant = new Plant({
       kind: req.body.kind,
       tips: req.body.tips,
+      type: req.body.type,
+      owner: req.user.id,
     });
 
     plant
@@ -15,6 +17,16 @@ class PlantController {
       .catch((err) => {
         res.json({ message: err });
       });
+  }
+
+  async showAll(req, res) {
+    try {
+      Plant.find({}).then(function (plants) {
+        res.send(plants);
+      });
+    } catch (err) {
+      res.json({ message: err });
+    }
   }
 }
 
