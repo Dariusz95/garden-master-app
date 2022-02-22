@@ -1,8 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import home from "../components/home";
+import plants from "../components/plants";
+import plantsDetails from "../components/plantDetails";
 import fame from "../components/fame";
 import addForm from "../components/addForm";
+import login from "../components/login";
+import register from "../components/register";
 
 Vue.use(VueRouter);
 
@@ -13,6 +17,12 @@ const routes = [
     component: home,
   },
   {
+    path: "/plants",
+    name: "plants",
+    component: plants,
+  },
+  { path: "/plants/:id", name: "plantsDetails", component: plantsDetails },
+  {
     path: "/fame",
     name: "fame",
     component: fame,
@@ -21,6 +31,16 @@ const routes = [
     path: "/add",
     name: "addForm",
     component: addForm,
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: login,
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: register,
   },
 ];
 

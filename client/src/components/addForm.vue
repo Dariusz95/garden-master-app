@@ -12,7 +12,7 @@
           <v-select
             v-model="kind"
             :items="select_type"
-            label="Wybierz zwierzaka"
+            label="Wybierz typ rośliny"
             solo
             required
           ></v-select>

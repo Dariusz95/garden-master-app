@@ -11,7 +11,7 @@
       </div>
       <div class="homepage-img"></div>
     </div>
-    <plants />
+    <!-- <plants /> -->
   </div>
 </template>
 <script>
