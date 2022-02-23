@@ -12,7 +12,6 @@
 
         <div class="login-form__input">
           <input
-            :class="{ errorInput: badLoginOrPass }"
             v-model="login"
             type="text"
             name="login"
@@ -24,7 +23,6 @@
         </div>
         <div class="login-form__input">
           <input
-            :class="{ errorInput: badLoginOrPass }"
             v-model="password"
             type="password"
             name="password"
@@ -34,14 +32,13 @@
           />
           <v-icon>mdi-lock-outline</v-icon>
         </div>
-        <div class="error-text" v-if="this.badLoginOrPass">
+        <!-- <div class="error-text" v-if="this.badLoginOrPass">
           Błędny login lub hasło
-        </div>
+        </div> -->
         <v-btn
           :disabled="!this.login || !this.password"
           @click.prevent="submitUser"
           id="btn"
-          @click="show = !show"
         >
           Zaloguj się
         </v-btn>

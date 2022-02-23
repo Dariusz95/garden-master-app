@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import home from "../components/home";
 import plants from "../components/plants";
-import plantsDetails from "../components/plantDetails";
+import plantDetails from "../components/plantDetails";
 import fame from "../components/fame";
 import addForm from "../components/addForm";
 import login from "../components/login";
@@ -21,7 +21,7 @@ const routes = [
     name: "plants",
     component: plants,
   },
-  { path: "/plants/:id", name: "plantsDetails", component: plantsDetails },
+  { path: "/plants/:id", name: "plantDetails", component: plantDetails },
   {
     path: "/fame",
     name: "fame",

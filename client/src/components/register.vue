@@ -46,7 +46,7 @@
         <div class="register-form__input">
           <input
             v-model="email"
-            type="password"
+            type="text"
             name="password"
             required
             placeholder="E-MAIL"
@@ -92,7 +92,7 @@ export default {
     async register() {
       if (this.password === this.confirmPassword) {
         await axios
-          .post(`${API_URL}register/`, {
+          .post(`${API_URL}/register`, {
             login: this.login,
             email: this.email,
             password: this.password,
@@ -115,7 +115,7 @@ export default {
     bottom: 0;
     z-index: -10;
     height: 100vh;
-    transform: rotateY(180deg);
+    transform: rotateY(180deg) rotateX(180deg);
   }
 
   .register-img {

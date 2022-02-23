@@ -38,7 +38,7 @@ const actions = {
   async login(context, payload) {
     try {
       console.log(API_URL);
-      const response = await axios.post(`${API_URL}login`, payload);
+      const response = await axios.post(`${API_URL}/login`, payload);
       context.commit("setAccessToken", response.data.accessToken);
       context.commit("setRefreshToken", response.data.refreshToken);
       context.commit("setAuthenticated", true);
@@ -53,20 +53,6 @@ const actions = {
     context.commit("setRefreshToken", null);
     context.commit("setAuthenticated", false);
   },
-  // async refreshToken(context) {
-  //   const refreshUrl = "http://127.0.0.1:8000/api/v1/user/refresh-token/";
-  //   try {
-  //     await axios
-  //       .post(refreshUrl, { refresh: state.refreshToken })
-  //       .then((response) => {
-  //         if (response.status === 200) {
-  //           context.commit("setAccessToken", response.data.access);
-  //         }
-  //       });
-  //   } catch (e) {
-  //     console.log(e.response);
-  //   }
-  // },
 };
 export default {
   state,
