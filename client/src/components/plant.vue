@@ -9,7 +9,8 @@
           <span>ilość polubień</span>
         </div>
         <div class="plant__describe_like-item">
-          <i class="fas fa-thumbs-up" @click="likeUp(plant._id)"></i>
+          <i class="fas fa-thumbs-up" @click="likeUp(plant._id, $event)"> </i>
+
           <span>Polub to</span>
         </div>
       </div>
@@ -17,6 +18,7 @@
         Zobacz szczegóły <v-icon>mdi-arrow-right</v-icon>
       </div>
     </div>
+    <div :class="{ active: isActive }" class="err-text">{{ errLike }}</div>
   </div>
 </template>
 <script>
@@ -26,10 +28,19 @@ import router from "@/router";
 import { mapGetters } from "vuex";
 export default {
   name: "plant",
-  data: () => ({}),
+  data: () => {
+    return {
+      isActive: false,
+    };
+  },
   props: {
     plant: {
       type: Object,
+      required: true,
+      isActive: false,
+    },
+    errLike: {
+      type: String,
       required: true,
     },
   },
@@ -39,8 +50,9 @@ export default {
     },
   },
   methods: {
-    likeUp(id) {
-      this.$emit("add-like", id);
+    likeUp(id, e) {
+      this.$emit("add-like", id, e);
+      this.isActive = true;
     },
     goToDetails() {
       console.log("asdas");
@@ -55,10 +67,23 @@ export default {
 .plant {
   display: flex;
   flex-direction: column;
+  position: relative;
+  .err-text {
+    position: absolute;
+    bottom: -20px;
+    transform: translateX(-50%);
+    left: 50%;
+    visibility: hidden;
+  }
+  .err-text.active {
+    visibility: visible;
+  }
   img {
     width: 100%;
     height: 100%;
+    border-radius: 15px;
   }
+
   &__describe {
     position: absolute;
     bottom: 0;
@@ -71,6 +96,8 @@ export default {
     background: #00000087;
     color: white;
     transition: all 0.3s ease-out;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
 
     i {
       cursor: pointer;
@@ -79,7 +106,6 @@ export default {
     &_like {
       display: flex;
       justify-content: space-evenly;
-      // background: $base-color;
       background: rgb(77, 192, 181);
       background: linear-gradient(
         90deg,
@@ -99,6 +125,7 @@ export default {
         transition: color 0.3s;
         .fas {
           font-size: 3rem;
+          position: relative;
         }
         span:last-child {
           font-size: 1.2rem;

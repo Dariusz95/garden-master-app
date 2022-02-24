@@ -1,7 +1,8 @@
 <template>
   <div class="plants">
     <div class="plant d-flex flex-row" v-for="plant in plants" :key="plant._id">
-      <plant :plant="plant" @add-like="addLike" />
+      <plant :plant="plant" :errLike="errLike" @add-like="addLike" />
+      <div class="err-text">{{ errLike }}</div>
     </div>
   </div>
 </template>
@@ -16,28 +17,34 @@ export default {
   data() {
     return {
       plants: "",
+      errLike: "",
     };
   },
   computed: {
     ...mapGetters({ accessToken: "getAccessToken" }),
   },
   methods: {
-    async addLike(id) {
+    async addLike(id, event) {
       try {
+        console.log(event.target);
+        console.log(event);
         const headers = {
           Authorization: `Bearer ${this.accessToken}`,
         };
+        let self = this;
         await axios
           .post(
-            `http://localhost:3000/api/plant/like`,
+            `${API_URL}/plant/like`,
             {
               _id: id,
             },
             { headers }
           )
           .then(this.fetchPlant())
-          .catch((err) => {
-            console.log("error catch", err);
+          .catch(function (error) {
+            if (error.response) {
+              self.errLike = error.response.data;
+            }
           });
       } catch (err) {
         console.log(err);
@@ -70,9 +77,14 @@ export default {
   position: relative;
   height: 500px;
   margin: 0 5px;
-  overflow: hidden;
   border-radius: 15px;
   margin: 10px 10px;
   box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+  .err-text {
+    position: absolute;
+    bottom: -20px;
+    transform: translateX(-50%);
+    left: 50%;
+  }
 }
 </style>

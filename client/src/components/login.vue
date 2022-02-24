@@ -54,6 +54,7 @@
 import axios from "axios";
 import API_URL from "../../api";
 import { mapActions } from "vuex";
+import Router from "vue-router";
 export default {
   name: "login",
   data() {
@@ -70,6 +71,7 @@ export default {
     async submitUser() {
       const { login, password } = this;
       await this.loginUser({ login, password });
+      this.$router.push({ name: "home" });
 
       // await axios
       //   .post(`${API_URL}login`, {
