@@ -1,10 +1,12 @@
 import API_URL from "../../api";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 const state = {
   accesToken: null,
   refreshToken: null,
   isAuthenticated: false,
+  currentUser: {},
 };
 
 const getters = {
@@ -16,6 +18,9 @@ const getters = {
   },
   isAuthenticated(state) {
     return state.isAuthenticated;
+  },
+  getCurrentUser(state) {
+    return state.currentUser;
   },
 };
 
@@ -32,6 +37,9 @@ const mutations = {
   setErrorLogin(state, err) {
     state.errorLogin = err;
   },
+  setCurrentUser(state, user) {
+    state.currentUser = user;
+  },
 };
 
 const actions = {
@@ -42,6 +50,8 @@ const actions = {
       context.commit("setAccessToken", response.data.accessToken);
       context.commit("setRefreshToken", response.data.refreshToken);
       context.commit("setAuthenticated", true);
+      let user = await jwt_decode(response.data.accessToken);
+      context.commit("setCurrentUser", user);
     } catch (err) {
       context.commit("setAccessToken", null);
       context.commit("setRefreshToken", null);

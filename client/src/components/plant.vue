@@ -1,7 +1,8 @@
 <template>
   <div class="w-100 d-flex flex-column position-relative">
-    <!-- <img src="../assets/img/arrow.png" alt="plant image" /> -->
+    <div v-if="errLike" :class="{ errorPlant: isActive }"></div>
     <img :src="getImgUrl" alt="plant image" />
+
     <div class="plant__describe">
       <div class="plant__describe_like">
         <div class="plant__describe_like-item">
@@ -18,7 +19,9 @@
         Zobacz szczegóły <v-icon>mdi-arrow-right</v-icon>
       </div>
     </div>
-    <div :class="{ active: isActive }" class="err-text">{{ errLike }}</div>
+    <div v-if="errLike" :class="{ active: isActive }" class="err-text">
+      {{ errLike }}
+    </div>
   </div>
 </template>
 <script>
@@ -53,10 +56,11 @@ export default {
     likeUp(id, e) {
       this.$emit("add-like", id, e);
       this.isActive = true;
+      setTimeout(() => {
+        this.isActive = false;
+      }, 2500);
     },
     goToDetails() {
-      console.log("asdas");
-      console.log(this.plant._id);
       router.push({ name: "plantDetails", params: { id: this.plant._id } });
     },
   },
@@ -68,20 +72,51 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-  .err-text {
+
+  .errorPlant {
     position: absolute;
-    bottom: -20px;
-    transform: translateX(-50%);
-    left: 50%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: #ff000070;
+    z-index: 10;
+    animation: 0.7s errMove;
+    animation-fill-mode: forwards;
+    animation-direction: alternate;
+  }
+  .err-text {
+    font-size: 2rem;
+    position: absolute;
+    bottom: 25%;
     visibility: hidden;
+    width: 100%;
+    text-align: center;
+    color: red;
+    background: white;
+    z-index: 10;
+    padding: 10px;
+    border-radius: 90px;
+    width: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    // opacity: 100;
+    opacity: 0%;
   }
   .err-text.active {
     visibility: visible;
+    animation: 0.7s errMove;
+    animation-fill-mode: forwards;
+    animation-direction: alternate;
   }
   img {
     width: 100%;
     height: 100%;
     border-radius: 15px;
+    position: relative;
   }
 
   &__describe {
@@ -141,8 +176,20 @@ export default {
     }
   }
 }
+.plant.active {
+  box-shadow: 0px 0px 25px -8px #fe0005;
+}
 
 .plant__describe .plant_describe_like-item:last-child:hover {
   color: blue;
+}
+
+@keyframes errMove {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 100%;
+  }
 }
 </style>

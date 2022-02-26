@@ -2,7 +2,6 @@
   <div class="plants">
     <div class="plant d-flex flex-row" v-for="plant in plants" :key="plant._id">
       <plant :plant="plant" :errLike="errLike" @add-like="addLike" />
-      <div class="err-text">{{ errLike }}</div>
     </div>
   </div>
 </template>
@@ -11,6 +10,7 @@ import axios from "axios";
 import plant from "./plant.vue";
 import API_URL from "../../api";
 import { mapGetters } from "vuex";
+import http from "../http";
 export default {
   components: { plant },
   name: "plants",
@@ -24,31 +24,26 @@ export default {
     ...mapGetters({ accessToken: "getAccessToken" }),
   },
   methods: {
-    async addLike(id, event) {
+    async addLike(id) {
       try {
-        console.log(event.target);
-        console.log(event);
-        const headers = {
-          Authorization: `Bearer ${this.accessToken}`,
-        };
         let self = this;
-        await axios
-          .post(
-            `${API_URL}/plant/like`,
-            {
-              _id: id,
-            },
-            { headers }
-          )
+        await http
+          .post(`${API_URL}/plant/like`, {
+            _id: id,
+          })
           .then(this.fetchPlant())
           .catch(function (error) {
             if (error.response) {
+              self.isError = true;
+              if (error.response.data === "no token")
+                return (self.errLike = "Musisz się zalogować");
               self.errLike = error.response.data;
             }
           });
       } catch (err) {
         console.log(err);
       }
+      this.fetchPlant();
     },
     fetchPlant() {
       axios.get(`${API_URL}/plant`).then((res) => {
@@ -78,13 +73,8 @@ export default {
   height: 500px;
   margin: 0 5px;
   border-radius: 15px;
+  overflow: hidden;
   margin: 10px 10px;
   box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
-  .err-text {
-    position: absolute;
-    bottom: -20px;
-    transform: translateX(-50%);
-    left: 50%;
-  }
 }
 </style>
