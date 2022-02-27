@@ -5,13 +5,40 @@
         <span class="comment-user-login">{{ comment.owner.login }}</span>
         <span class="comment-user-relTime">{{ relativeDate() }}</span>
       </div>
-
-      <span class="comment-user-createTime">{{ createDate() }}</span>
+      <div>
+        <button
+          class="btn editCommentBtn"
+          v-if="isOwner"
+          @click="editComment()"
+        >
+          Edytuj
+        </button>
+        <button
+          class="btn saveEditCommentBtn"
+          v-if="isOwner && isCommentEdit"
+          @click="saveEditComment()"
+        >
+          Zapisz
+        </button>
+        <button
+          class="btn deleteCommentBtn"
+          v-if="isOwner"
+          @click="deleteComment()"
+        >
+          Usuń
+        </button>
+        <span class="comment-user-createTime">{{ createDate() }}</span>
+      </div>
     </div>
 
-    <div class="comment-content" :class="{ isOwner: isOwnerComment }">
-      <span>{{ comment.comment }} </span>
-      <button v-if="isOwner">Usuń</button>
+    <div class="comment-content" :class="{ isOwner: isOwner }">
+      <p v-if="!isCommentEdit">{{ comment.comment }}</p>
+      <textarea
+        class="editComment"
+        v-if="isCommentEdit"
+        type="text"
+        v-model="comment.comment"
+      />
     </div>
   </div>
 </template>
@@ -28,6 +55,7 @@ export default {
   data() {
     return {
       isOwnerComment: false,
+      isCommentEdit: false,
     };
   },
   name: "comment",
@@ -48,10 +76,18 @@ export default {
     relativeDate() {
       return moment(this.comment.create_date).fromNow();
     },
+    deleteComment() {
+      console.log("klik w child");
+      this.$emit("deleteComment", this.comment._id);
+    },
+    editComment() {
+      this.isCommentEdit = !this.isCommentEdit;
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
+@import "../assets/styles/_main.scss";
 .comment {
   padding: 10px;
   border-radius: 15px;
@@ -66,16 +102,46 @@ export default {
       margin-right: 1rem;
       font-weight: bold;
     }
+    .btn {
+      padding: 0px 20px;
+      background: red;
+      height: 100%;
+      font-size: 1.4rem;
+      border-radius: 10px;
+    }
+    .editCommentBtn {
+      margin-right: 5px;
+      background: $editBtnColor;
+    }
+    .deleteCommentBtn {
+      background: $deleteBtnColor;
+    }
+    .saveEditCommentBtn {
+      background: green;
+    }
   }
   &-content {
     display: flex;
     font-size: 2.6rem;
+    word-break: break-word;
+    margin-top: 5px;
+    p {
+      margin-bottom: 0;
+    }
     > button {
       border: 1px solid black;
       border-radius: 10px;
       background: #ff0000d9;
       font-size: 1.6rem;
       padding: 6px 25px;
+      max-height: 40px;
+      min-width: 100px;
+    }
+    .editComment {
+      width: 100%;
+      border: 1px solid black;
+      border-radius: 10px;
+      padding-left: 5px;
     }
   }
   &-content.isOwner {

@@ -6,6 +6,14 @@
           <img :src="getImgUrl" alt="plant image" />
         </v-col>
         <v-col cols="4" class="details-user">
+          <div v-if="isOwner" class="details-user-buttons">
+            <button class="editBtn">
+              <span>edytuj<v-icon>mdi-pencil</v-icon></span>
+            </button>
+            <button class="deleteBtn">
+              <span>usuń <v-icon>mdi-delete</v-icon></span>
+            </button>
+          </div>
           <div class="details-user-item">
             <v-icon>mdi-account</v-icon><span>{{ plant.owner.login }}</span>
           </div>
@@ -38,8 +46,10 @@
           />
           <v-icon @click="addComment">mdi-send</v-icon>
         </div>
-        <ul v-for="comment in plant.comments" :key="comment._id">
-          <li><comment :comment="comment" /></li>
+        <ul>
+          <li v-for="comment in plant.comments" :key="comment._id">
+            <comment :comment="comment" @deleteComment="deleteComment" />
+          </li>
         </ul>
       </div>
     </div>
@@ -51,6 +61,7 @@ import comment from "./comment.vue";
 import API_URL from "../../api";
 import axios from "axios";
 import http from "../http";
+import { mapGetters } from "vuex";
 export default {
   components: {
     comment,
@@ -60,9 +71,18 @@ export default {
     return {
       plant: "",
       commentInput: "",
+      isOwnerPlant: false,
     };
   },
   computed: {
+    ...mapGetters(["getCurrentUser"]),
+
+    isOwner() {
+      if (this.getCurrentUser.login == this.plant.owner.login) {
+        this.isOwnerPlant = true;
+        return true;
+      }
+    },
     plantId() {
       return this.$route.params.id;
     },
@@ -89,6 +109,15 @@ export default {
             _id: this.plantId,
           })
           .then(this.getPlant());
+      } catch (err) {
+        console.log(err);
+      }
+      this.getPlant();
+    },
+    async deleteComment(id) {
+      console.log(id);
+      try {
+        await http.delete(`${API_URL}/comment/${id}`);
       } catch (err) {
         console.log(err);
       }
@@ -131,6 +160,107 @@ export default {
       align-items: flex-start;
       flex-direction: column;
       overflow: hidden;
+      position: relative;
+      &-buttons {
+        display: flex;
+        justify-content: space-evenly;
+        position: absolute;
+        top: 0;
+        transform: translateY(50%);
+        width: 100%;
+
+        > button {
+          position: relative;
+          background: none;
+          border: none;
+          color: #fff;
+          cursor: pointer;
+          display: inline-block;
+          padding: 5px 10px;
+          transition: all 0.3s;
+          span {
+            display: block;
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            .v-icon {
+              margin-left: 5px;
+            }
+          }
+          span::before,
+          span::after {
+            content: "";
+            position: absolute;
+            width: 2px;
+            height: 0px;
+            transition: all 0.3s linear;
+            background: #fff;
+          }
+          span::after {
+            right: 0;
+            top: 0;
+            transition-duration: 0.3s;
+          }
+          span::before {
+            left: 0;
+            bottom: 0;
+            transition-duration: 0.3s;
+          }
+        }
+        > button.editBtn {
+          margin-right: 1rem;
+          background: rgb(197 195 65 / 97%);
+          .v-icon {
+            color: $editBtnColor;
+          }
+        }
+        > button.deleteBtn {
+          background: $deleteBtnColor;
+          .v-icon {
+            color: $deleteBtnColor;
+          }
+        }
+        > button.editBtn:hover {
+          background: black;
+          box-shadow: 1px 1px 12px 7px $editBtnColor;
+        }
+        > button.deleteBtn:hover {
+          background: black;
+          box-shadow: 1px 1px 12px 7px $deleteBtnColor;
+        }
+
+        > button::before,
+        > button::after {
+          content: "";
+          position: absolute;
+          width: 0px;
+          height: 2px;
+          transition: all 0.3s linear;
+          background: #fff;
+        }
+
+        > button:hover::before,
+        > button:hover::after {
+          width: 100%;
+        }
+
+        > button:hover span::before {
+          height: 100%;
+        }
+        > button:hover span::after {
+          height: 100%;
+        }
+        > button::after {
+          left: 0;
+          bottom: 0;
+          transition-duration: 0.3s;
+        }
+        > button::before {
+          right: 0;
+          top: 0;
+          transition-duration: 0.3s;
+        }
+      }
       &-item {
         display: flex;
         .v-icon {
@@ -194,7 +324,7 @@ export default {
       }
 
       margin-top: 2rem;
-      > span {
+      > p {
         font-size: 2rem;
         margin-top: 3rem;
       }
@@ -204,8 +334,17 @@ export default {
       }
       li {
         list-style: none;
+        margin-top: 1rem;
       }
     }
+  }
+}
+@keyframes buttonAnimation {
+  from {
+    display: none;
+  }
+  to {
+    display: block;
   }
 }
 </style>
