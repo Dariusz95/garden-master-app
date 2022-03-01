@@ -83,6 +83,10 @@ export default {
     editComment() {
       this.isCommentEdit = !this.isCommentEdit;
     },
+    saveEditComment() {
+      this.$emit("updateComment", this.comment._id, this.comment.comment);
+      this.isCommentEdit = false;
+    },
   },
 };
 </script>

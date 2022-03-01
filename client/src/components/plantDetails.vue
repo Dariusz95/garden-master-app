@@ -1,27 +1,27 @@
 <template>
   <div class="details-container">
     <div class="details">
-      <v-row>
-        <v-col class="img" cols="12" lg="8">
-          <img :src="getImgUrl" alt="plant image" />
-        </v-col>
-        <v-col cols="4" class="details-user">
-          <div v-if="isOwner" class="details-user-buttons">
-            <button class="editBtn">
-              <span>edytuj<v-icon>mdi-pencil</v-icon></span>
-            </button>
-            <button class="deleteBtn">
-              <span>usuń <v-icon>mdi-delete</v-icon></span>
-            </button>
-          </div>
-          <div class="details-user-item">
-            <v-icon>mdi-account</v-icon><span>{{ plant.owner.login }}</span>
-          </div>
-          <div class="details-user-item">
-            <v-icon>mdi-email</v-icon><span>{{ plant.owner.email }}</span>
-          </div>
-        </v-col>
-      </v-row>
+      <div class="details-header">
+        <div class="details-header-login">
+          <v-icon>mdi-account</v-icon><span>{{ plant.owner.login }}</span>
+        </div>
+        <div v-if="isOwner" class="details-header-buttons">
+          <button class="editBtn" @click="isPlantEdit = true">
+            <span>edytuj<v-icon>mdi-pencil</v-icon></span>
+          </button>
+          <button class="deleteBtn">
+            <span>usuń <v-icon>mdi-delete</v-icon></span>
+          </button>
+        </div>
+      </div>
+      <div class="details-img">
+        <img :src="getImgUrl" alt="plant image" />
+      </div>
+
+      <div class="details-user">
+        <div class="details-user-item"></div>
+      </div>
+
       <div class="details-describe">
         <div class="details-describe-item">
           <v-icon>mdi-cannabis</v-icon>
@@ -48,16 +48,28 @@
         </div>
         <ul>
           <li v-for="comment in plant.comments" :key="comment._id">
-            <comment :comment="comment" @deleteComment="deleteComment" />
+            <Transition name="fade">
+              <comment
+                :comment="comment"
+                @deleteComment="deleteComment"
+                @updateComment="saveEditComment"
+              />
+            </Transition>
           </li>
         </ul>
       </div>
     </div>
+    <plantEditModal
+      @cancelEdit="cancelEdit"
+      v-if="isPlantEdit"
+      :plant="plant"
+    />
   </div>
 </template>
 
 <script>
 import comment from "./comment.vue";
+import plantEditModal from "./plantEditModal.vue";
 import API_URL from "../../api";
 import axios from "axios";
 import http from "../http";
@@ -65,13 +77,15 @@ import { mapGetters } from "vuex";
 export default {
   components: {
     comment,
+    plantEditModal,
   },
   name: "plantDetails",
   data() {
     return {
-      plant: "",
+      plant: {},
       commentInput: "",
       isOwnerPlant: false,
+      isPlantEdit: false,
     };
   },
   computed: {
@@ -103,12 +117,10 @@ export default {
     },
     async addComment() {
       try {
-        await http
-          .post(`${API_URL}/comment`, {
-            comment: this.commentInput,
-            _id: this.plantId,
-          })
-          .then(this.getPlant());
+        await http.post(`${API_URL}/comment`, {
+          comment: this.commentInput,
+          _id: this.plantId,
+        });
       } catch (err) {
         console.log(err);
       }
@@ -123,9 +135,26 @@ export default {
       }
       this.getPlant();
     },
+    async saveEditComment(id, comment) {
+      try {
+        await http.patch(`${API_URL}/comment/${id}`, {
+          comment: comment,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+      this.getPlant();
+    },
+    cancelEdit(isEdit) {
+      if (isEdit) {
+        this.getPlant();
+      }
+      this.isPlantEdit = false;
+    },
   },
 };
 </script>
+
 <style lang="scss">
 @import "../assets/styles/_main.scss";
 .details-container {
@@ -140,34 +169,29 @@ export default {
   background-attachment: fixed;
 
   .details {
-    width: 75vw;
-    padding: 4rem;
+    width: 45vw;
+    padding: 5rem;
     border-radius: 15px;
     margin-top: 20px;
     background: #00000008;
-    .img {
+    &-header {
       display: flex;
-      justify-content: center;
-      img {
-        max-height: 500px;
-        width: 100%;
-        border-radius: 15px;
+      &-login {
+        display: flex;
+        align-items: center;
+        .v-icon {
+          font-size: 4rem;
+          color: green;
+        }
+        > span {
+          font-size: 2.5rem;
+        }
       }
-    }
-    &-user {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      flex-direction: column;
-      overflow: hidden;
-      position: relative;
+
       &-buttons {
         display: flex;
-        justify-content: space-evenly;
-        position: absolute;
-        top: 0;
-        transform: translateY(50%);
         width: 100%;
+        justify-content: flex-end;
 
         > button {
           position: relative;
@@ -176,8 +200,8 @@ export default {
           color: #fff;
           cursor: pointer;
           display: inline-block;
-          padding: 5px 10px;
-          transition: all 0.3s;
+          padding: 7px 35px;
+          transition: all 0.4s;
           span {
             display: block;
             display: flex;
@@ -261,15 +285,12 @@ export default {
           transition-duration: 0.3s;
         }
       }
-      &-item {
-        display: flex;
-        .v-icon {
-          font-size: 4rem;
-          color: green;
-        }
-        > span {
-          font-size: 2.5rem;
-        }
+    }
+    &-img {
+      img {
+        max-height: 500px;
+        width: 100%;
+        margin: 1.5rem 0;
       }
     }
 
@@ -302,6 +323,9 @@ export default {
     }
 
     &-comment {
+      > span {
+        font-size: 1.9rem;
+      }
       &-input {
         position: relative;
         input {
@@ -338,6 +362,15 @@ export default {
       }
     }
   }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 @keyframes buttonAnimation {
   from {

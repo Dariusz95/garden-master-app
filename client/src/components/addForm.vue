@@ -4,7 +4,7 @@
       <form
         class="createForm"
         enctype="multipart/form-data"
-        @submit.prevent="addAnimal"
+        @submit.prevent="addPlant"
       >
         <div class="form_single_wrap">
           <label for="tips">Porady od autora:</label>
@@ -61,6 +61,7 @@
 import API_URL from "../../api";
 import axios from "axios";
 import { mapGetters } from "vuex";
+import http from "../http";
 export default {
   name: "addForm",
   data() {
@@ -95,17 +96,17 @@ export default {
       // let file = e.target.files[0] || e.dataTransfer.files[0];
       this.file = this.$refs.file.files[0];
     },
-    async addAnimal() {
+    async addPlant() {
       let formData = await new FormData();
       formData.append("kind", this.kind);
       formData.append("type", this.type);
       formData.append("tips", this.tips);
 
       formData.append("image", this.file);
-      const headers = {
-        Authorization: `Bearer ${this.accessToken}`,
-      };
-      await axios.post(`${API_URL}plant`, formData, { headers });
+      // const headers = {
+      //   Authorization: `Bearer ${this.accessToken}`,
+      // };
+      await http.post(`${API_URL}/plant`, formData);
     },
   },
 };
