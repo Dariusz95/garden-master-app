@@ -7,9 +7,11 @@ const cors = require("cors");
 
 app.use(bodyParser.json());
 
+// app.use(express.static("uploads"));
 app.use(cors());
 require("./db/mongoose");
 
+app.use("/api/images", express.static(__dirname + "/uploads"));
 app.use("/api", apiRouter);
 
 module.exports = app;

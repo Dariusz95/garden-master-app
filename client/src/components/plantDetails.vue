@@ -146,7 +146,7 @@ export default {
       this.getPlant();
     },
     cancelEdit(isEdit) {
-      if (isEdit) {
+      if (isEdit === "edit") {
         this.getPlant();
       }
       this.isPlantEdit = false;

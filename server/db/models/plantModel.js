@@ -22,6 +22,12 @@ const plantSchema = new Schema({
     required: true,
     ref: "User",
   },
+  like: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   comments: [
     {
       type: mongoose.Schema.Types.ObjectId,

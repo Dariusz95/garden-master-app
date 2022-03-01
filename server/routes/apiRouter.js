@@ -14,13 +14,20 @@ router.post("/login", UserController.login);
 
 router.post("/refresh", UserController.refreshToken);
 
-router.get("/admin", isAuth, (req, res) => {
-  res.send("witoj");
-});
-
 router.post("/comment", isAuth, CommentController.create);
+router.delete("/comment/:id", isAuth, CommentController.delete);
+router.patch("/comment/:id", isAuth, CommentController.update);
 
 router.get("/plant", plantController.showAll);
+router.get("/plant/:id", plantController.showPlantByID);
+router.patch(
+  "/plant/:id",
+  imageService.single("image"),
+  isAuth,
+  plantController.updatePlant
+);
+router.post("/plant/like", isAuth, plantController.addLike);
+
 router.post(
   "/plant",
   imageService.single("image"),

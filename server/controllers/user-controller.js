@@ -16,6 +16,22 @@ class UserController {
       role: req.body.role,
     });
     try {
+      const username = await User.findOne({ login: req.body.login });
+      const email = await User.findOne({ email: req.body.email });
+      if (username) {
+        res
+          .status(403)
+          .json(
+            "A user with that login has already registered. Please use a different email."
+          );
+      }
+      if (email) {
+        res
+          .status(403)
+          .json(
+            "A user with that email has already registered. Please use a different email."
+          );
+      }
       await user.save();
       res.status(201).send("User " + req.body.email + " created");
     } catch (err) {

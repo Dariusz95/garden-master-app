@@ -1,7 +1,3 @@
-// import { __dirname } from '../../config.js';
-// import mv from 'mv';
-// import Plant from '../db/models/plantModel.js';
-
 const path = require("path");
 const multer = require("multer");
 

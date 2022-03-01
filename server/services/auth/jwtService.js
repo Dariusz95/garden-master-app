@@ -60,6 +60,7 @@ const compareRefreshToken = async (token) => {
   });
   return userData;
 };
+
 const deleteRefreshTokens = async (owner) => {
   const data = await RefreshToken.find({ owner }).select("refreshToken -_id");
   const existsTokens = [];
