@@ -48,13 +48,11 @@
         </div>
         <ul>
           <li v-for="comment in plant.comments" :key="comment._id">
-            <Transition name="fade">
-              <comment
-                :comment="comment"
-                @deleteComment="deleteComment"
-                @updateComment="saveEditComment"
-              />
-            </Transition>
+            <comment
+              :comment="comment"
+              @deleteComment="deleteComment"
+              @updateComment="saveEditComment"
+            />
           </li>
         </ul>
       </div>
@@ -361,23 +359,6 @@ export default {
         margin-top: 1rem;
       }
     }
-  }
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-@keyframes buttonAnimation {
-  from {
-    display: none;
-  }
-  to {
-    display: block;
   }
 }
 </style>

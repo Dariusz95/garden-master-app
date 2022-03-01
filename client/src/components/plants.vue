@@ -1,7 +1,22 @@
 <template>
-  <div class="plants">
-    <div class="plant d-flex flex-row" v-for="plant in plants" :key="plant._id">
-      <plant :plant="plant" :errLike="errLike" @add-like="addLike" />
+  <div class="plants-container">
+    <div class="plants">
+      <transition-group name="fade">
+        <div
+          class="plant d-flex flex-row"
+          v-for="plant in pageOfItems"
+          :key="plant._id"
+        >
+          <plant :plant="plant" :errLike="errLike" @add-like="addLike" />
+        </div>
+      </transition-group>
+    </div>
+    <div class="plants-pagination">
+      <jw-pagination
+        :pageSize="3"
+        :items="plants"
+        @changePage="onChangePage"
+      ></jw-pagination>
     </div>
   </div>
 </template>
@@ -18,12 +33,18 @@ export default {
     return {
       plants: "",
       errLike: "",
+      pageOfItems: [],
     };
   },
   computed: {
     ...mapGetters({ accessToken: "getAccessToken" }),
   },
   methods: {
+    onChangePage(pageOfItems) {
+      console.log(pageOfItems);
+      // update page of items
+      this.pageOfItems = pageOfItems;
+    },
     async addLike(id) {
       try {
         let self = this;
@@ -58,13 +79,29 @@ export default {
 };
 </script>
 <style lang="scss">
-.plants {
-  display: flex;
-  flex-wrap: wrap;
+.plants-container {
   position: relative;
   top: 80px;
   width: 80%;
   margin: 0 auto;
+  height: calc(100vh - 80px);
+}
+.plants {
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  margin: 0 auto;
+
+  &-pagination {
+    text-align: center;
+    font-size: 2rem;
+    margin-top: 5rem;
+    .page-item {
+      > a {
+        border: none;
+      }
+    }
+  }
 }
 
 .plant {
@@ -76,5 +113,15 @@ export default {
   overflow: hidden;
   margin: 10px 10px;
   box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

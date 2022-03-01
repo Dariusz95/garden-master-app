@@ -1,46 +1,48 @@
 <template>
-  <div class="comment">
-    <div class="comment-user">
-      <div>
-        <span class="comment-user-login">{{ comment.owner.login }}</span>
-        <span class="comment-user-relTime">{{ relativeDate() }}</span>
+  <transition name="fade">
+    <div class="comment">
+      <div class="comment-user">
+        <div>
+          <span class="comment-user-login">{{ comment.owner.login }}</span>
+          <span class="comment-user-relTime">{{ relativeDate() }}</span>
+        </div>
+        <div>
+          <button
+            class="btn editCommentBtn"
+            v-if="isOwner"
+            @click="editComment()"
+          >
+            Edytuj
+          </button>
+          <button
+            class="btn saveEditCommentBtn"
+            v-if="isOwner && isCommentEdit"
+            @click="saveEditComment()"
+          >
+            Zapisz
+          </button>
+          <button
+            class="btn deleteCommentBtn"
+            v-if="isOwner"
+            @click="deleteComment()"
+          >
+            Usuń
+          </button>
+          <span class="comment-user-createTime">{{ createDate() }}</span>
+        </div>
       </div>
-      <div>
-        <button
-          class="btn editCommentBtn"
-          v-if="isOwner"
-          @click="editComment()"
-        >
-          Edytuj
-        </button>
-        <button
-          class="btn saveEditCommentBtn"
-          v-if="isOwner && isCommentEdit"
-          @click="saveEditComment()"
-        >
-          Zapisz
-        </button>
-        <button
-          class="btn deleteCommentBtn"
-          v-if="isOwner"
-          @click="deleteComment()"
-        >
-          Usuń
-        </button>
-        <span class="comment-user-createTime">{{ createDate() }}</span>
-      </div>
-    </div>
 
-    <div class="comment-content" :class="{ isOwner: isOwner }">
-      <p v-if="!isCommentEdit">{{ comment.comment }}</p>
-      <textarea
-        class="editComment"
-        v-if="isCommentEdit"
-        type="text"
-        v-model="comment.comment"
-      />
+      <div class="comment-content" :class="{ isOwner: isOwner }">
+        <p v-if="!isCommentEdit">{{ comment.comment }}</p>
+        <textarea
+          class="editComment"
+          v-if="isCommentEdit"
+          type="text"
+          v-model="comment.comment"
+        />
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 <script>
 import moment from "moment";
@@ -151,5 +153,12 @@ export default {
   &-content.isOwner {
     justify-content: space-between;
   }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
