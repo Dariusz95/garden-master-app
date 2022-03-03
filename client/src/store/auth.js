@@ -1,6 +1,6 @@
 import API_URL from "../../api";
-import axios from "axios";
 import jwt_decode from "jwt-decode";
+import http from "../http";
 
 const state = {
   accesToken: null,
@@ -46,7 +46,7 @@ const actions = {
   async login(context, payload) {
     try {
       console.log(API_URL);
-      const response = await axios.post(`${API_URL}/login`, payload);
+      const response = await http.post(`${API_URL}/login`, payload);
       context.commit("setAccessToken", response.data.accessToken);
       context.commit("setRefreshToken", response.data.refreshToken);
       context.commit("setAuthenticated", true);

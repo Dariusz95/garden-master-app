@@ -25,10 +25,10 @@
       <div class="details-describe">
         <div class="details-describe-item">
           <v-icon>mdi-cannabis</v-icon>
-          {{ plant.kind }}
+          {{ plant.type }}
         </div>
         <div class="details-describe-item">
-          <v-icon>mdi-carrot</v-icon>{{ plant.type }}
+          <v-icon>mdi-carrot</v-icon>{{ plant.kind }}
         </div>
       </div>
       <div class="details-tips">

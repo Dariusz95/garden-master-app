@@ -1,7 +1,40 @@
 <template>
-  <div class="plants-container">
-    <div class="plants">
-      <transition-group name="fade">
+  <v-app>
+    <div class="plants-container">
+      <v-row class="plants-filter">
+        <v-col cols="4">
+          <v-select
+            v-model="selected_type"
+            :items="select_type"
+            label="Typ roślin"
+            solo
+          ></v-select>
+        </v-col>
+        <v-col cols="4">
+          <v-select
+            :disabled="!selected_type"
+            v-model="selected_kind"
+            :items="select_kind"
+            label="Rodzaj roślin"
+            solo
+          ></v-select>
+        </v-col>
+        <v-col class="showPlantAmount" cols="4">
+          <span class="showPlantAmount-text">Pokaż</span>
+          <v-btn-toggle group mandatory>
+            <v-btn @click="changeShowPages(3)"> 3 </v-btn>
+            <v-btn @click="changeShowPages(6)"> 6 </v-btn>
+            <v-btn @click="changeShowPages(9)"> 9 </v-btn>
+          </v-btn-toggle>
+        </v-col>
+        <v-col class="colBtn">
+          <button class="resetFiltersBtn" @click="resetFilters">
+            Resetuj filtry
+          </button>
+        </v-col>
+      </v-row>
+      <!-- <div class="plants"> -->
+      <transition-group class="plants" tag="ul" name="fade-out-in">
         <div
           class="plant d-flex flex-row"
           v-for="plant in pageOfItems"
@@ -10,41 +43,80 @@
           <plant :plant="plant" :errLike="errLike" @add-like="addLike" />
         </div>
       </transition-group>
+      <!-- </div> -->
+      <div class="plants-pagination">
+        <jw-pagination
+          :pageSize="pageSize"
+          :items="filterAll || plants"
+          @changePage="onChangePage"
+          :key="componentReload"
+        ></jw-pagination>
+      </div>
     </div>
-    <div class="plants-pagination">
-      <jw-pagination
-        :pageSize="3"
-        :items="plants"
-        @changePage="onChangePage"
-      ></jw-pagination>
-    </div>
-  </div>
+  </v-app>
 </template>
 <script>
 import axios from "axios";
 import plant from "./plant.vue";
 import API_URL from "../../api";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import http from "../http";
 export default {
   components: { plant },
   name: "plants",
   data() {
     return {
-      plants: "",
+      componentReload: 0,
       errLike: "",
       pageOfItems: [],
+      select_type: ["Owoce", "Warzywa"],
+      selected_type: "",
+      pageSize: null || 3,
+      selected_kind: "",
     };
   },
   computed: {
+    select_kind() {
+      let select_kindFruit = [
+        "jagoda",
+        "malina",
+        "truskawka",
+        "porzeczka",
+        "poziomka",
+      ];
+      let select_kindVegetable = [
+        "pomidor",
+        "cebula",
+        "sałata",
+        "ogórek",
+        "dynia",
+        "kapusta",
+      ];
+      if (this.selected_type === "Owoce") return select_kindFruit;
+      if (this.selected_type === "Warzywa") return select_kindVegetable;
+    },
     ...mapGetters({ accessToken: "getAccessToken" }),
+    ...mapGetters({ plants: "getPlants" }),
+    ...mapGetters(["filterPlants"]),
+    filterAll() {
+      return this.filterPlants(this.selected_type, this.selected_kind);
+    },
   },
   methods: {
+    ...mapActions(["fetchPlants"]),
     onChangePage(pageOfItems) {
-      console.log(pageOfItems);
-      // update page of items
+      console.log("poszl");
       this.pageOfItems = pageOfItems;
     },
+
+    async changeShowPages(number) {
+      this.pageSize = number;
+      this.componentReload = !this.componentReload;
+    },
+    resetFilters() {
+      (this.selected_type = ""), (this.selected_kind = "");
+    },
+
     async addLike(id) {
       try {
         let self = this;
@@ -52,7 +124,6 @@ export default {
           .post(`${API_URL}/plant/like`, {
             _id: id,
           })
-          .then(this.fetchPlant())
           .catch(function (error) {
             if (error.response) {
               self.isError = true;
@@ -64,34 +135,73 @@ export default {
       } catch (err) {
         console.log(err);
       }
-      this.fetchPlant();
-    },
-    fetchPlant() {
-      axios.get(`${API_URL}/plant`).then((res) => {
-        console.log(res.data);
-        this.plants = res.data;
-      });
+      if (!this.errLike) this.fetchPlants();
     },
   },
   async created() {
-    await this.fetchPlant();
+    await this.fetchPlants();
   },
 };
 </script>
 <style lang="scss">
+@import "../assets/styles/_main.scss";
+
 .plants-container {
   position: relative;
   top: 80px;
   width: 80%;
   margin: 0 auto;
   height: calc(100vh - 80px);
+  .row {
+    margin: 0;
+  }
 }
+.plants-filter {
+  font-size: 1.6rem;
+  .v-text-field__details {
+    display: none;
+  }
+  .showPlantAmount {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-evenly;
+
+    .v-item-group {
+      flex-grow: 0.5;
+      justify-content: space-between;
+      .v-btn::before {
+        background-color: $base-color;
+      }
+      .v-btn__content {
+        font-size: 1.6rem;
+      }
+    }
+  }
+  .col {
+    padding: 12px 12px 0px;
+  }
+  .col.colBtn {
+    padding: 12px;
+  }
+  .resetFiltersBtn {
+    padding: 5px 20px;
+    border: 1px solid red;
+    border-radius: 15px;
+    color: red;
+    transition: background-color 0.4s;
+  }
+  .resetFiltersBtn:hover {
+    color: white;
+    background-color: red;
+  }
+}
+
 .plants {
   display: flex;
   flex-wrap: wrap;
   position: relative;
   margin: 0 auto;
-
+  padding: 0;
   &-pagination {
     text-align: center;
     font-size: 2rem;
@@ -115,13 +225,27 @@ export default {
   box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
+// .fade-enter-active,
+// .fade-leave-active {
+//   transition: opacity 0.3s ease;
+// }
+
+// .fade-enter-from,
+// .fade-leave-to {
+//   opacity: 0;
+// }
+
+.fade-out-in-enter-active,
+.fade-out-in-leave-active {
+  transition: opacity 0.3s;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.fade-out-in-enter-active {
+  transition-delay: 0.3s;
+}
+
+.fade-out-in-enter,
+.fade-out-in-leave-to {
   opacity: 0;
 }
 </style>
