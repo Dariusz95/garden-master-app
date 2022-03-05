@@ -3,7 +3,11 @@
     <div class="details">
       <div class="details-header">
         <div class="details-header-login">
-          <v-icon>mdi-account</v-icon><span>{{ plant.owner.login }}</span>
+          <img
+            class="comment-profile-picture rounded-circle mr-2"
+            :src="plant.owner.profilePicture"
+            alt="user image"
+          /><span>{{ plant.owner.login }}</span>
         </div>
         <div v-if="isOwner" class="details-header-buttons">
           <button class="editBtn" @click="isPlantEdit = true">

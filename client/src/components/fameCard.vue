@@ -1,9 +1,12 @@
 <template>
-  <div>
-    <div class="card">
-      <img :src="getImgUrl" alt="plant image" />
-      <span>{{ plant.like.length }}</span>
-      <span>{{ plant.owner.login }}</span>
+  <div class="card">
+    <span class="card-place">{{ index + 1 }}</span>
+    <img :src="getImgUrl" alt="plant image" />
+    <div class="card-describe">
+      <span class="card-describe-item">{{ plant.owner.login }}</span>
+      <span class="card-describe-item">
+        <i class="fas fa-thumbs-up"></i>{{ plant.like.length }}</span
+      >
     </div>
   </div>
 </template>
@@ -13,6 +16,10 @@ export default {
   props: {
     plant: {
       type: Object,
+      required: true,
+    },
+    index: {
+      type: Number,
       required: true,
     },
   },
@@ -30,15 +37,38 @@ export default {
 <style lang="scss">
 .card {
   display: flex;
-  width: 500px;
-  flex-direction: row;
-  //   height: 500px;
+  flex-direction: column;
+  position: relative;
+
   > img {
-    height: 200px;
-    width: 300px;
+    height: 150px;
+    width: 100%;
   }
-  > span {
-    display: block;
+
+  &-place {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    background: aliceblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translate(-50%, -50%);
+  }
+
+  &-describe {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+
+    &-item {
+      display: block;
+    }
   }
 }
 </style>

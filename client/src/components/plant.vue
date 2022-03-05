@@ -125,9 +125,9 @@ export default {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 20%;
+    height: 24%;
     justify-content: space-between;
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     background: #00000087;
     color: white;
     transition: all 0.3s ease-out;

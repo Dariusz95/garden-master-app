@@ -5,7 +5,11 @@
 html {
   font: 62.5% / 1.15 sans-serif;
 }
-$base-color: #4dc0b5;
+body {
+  margin-top: 70px;
+}
+// $base-color: #4dc0b5;
+$base-color: #8ed121;
 
 $editBtnColor: rgb(197, 195, 65);
 $deleteBtnColor: #e80000;

@@ -1,5 +1,11 @@
 <template>
-  <transition name="fade">
+  <div class="d-flex">
+    <img
+      class="comment-profile-picture"
+      :src="comment.owner.profilePicture"
+      alt="user image"
+    />
+    <!-- <transition name="fade"> -->
     <div class="comment">
       <div class="comment-user">
         <div>
@@ -42,7 +48,8 @@
         />
       </div>
     </div>
-  </transition>
+  </div>
+  <!-- </transition> -->
 </template>
 <script>
 import moment from "moment";
@@ -62,9 +69,9 @@ export default {
   },
   name: "comment",
   computed: {
-    ...mapGetters(["getCurrentUser"]),
+    ...mapGetters({ user: "getCurrentUser" }),
     isOwner() {
-      if (this.getCurrentUser.login == this.comment.owner.login) {
+      if (this.user.login == this.comment.owner.login) {
         this.isOwnerComment = true;
         return true;
       }
@@ -92,12 +99,21 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.comment-profile-picture {
+  width: 40px;
+  height: 40px;
+}
+</style>
 <style lang="scss" scoped>
 @import "../assets/styles/_main.scss";
+
 .comment {
   padding: 10px;
   border-radius: 15px;
   background: #ffffff6b;
+  flex-grow: 1;
+  margin-left: 10px;
   &-user {
     display: flex;
     justify-content: space-between;

@@ -22,9 +22,9 @@
         <v-col class="showPlantAmount" cols="4">
           <span class="showPlantAmount-text">Pokaż</span>
           <v-btn-toggle group mandatory>
-            <v-btn @click="changeShowPages(3)"> 3 </v-btn>
-            <v-btn @click="changeShowPages(6)"> 6 </v-btn>
-            <v-btn @click="changeShowPages(9)"> 9 </v-btn>
+            <v-btn @click="changeShowPages(4)"> 4 </v-btn>
+            <v-btn @click="changeShowPages(8)"> 8 </v-btn>
+            <v-btn @click="changeShowPages(12)"> 12 </v-btn>
           </v-btn-toggle>
         </v-col>
         <v-col class="colBtn">
@@ -71,7 +71,7 @@ export default {
       pageOfItems: [],
       select_type: ["Owoce", "Warzywa"],
       selected_type: "",
-      pageSize: null || 3,
+      pageSize: null || 4,
       selected_kind: "",
     };
   },
@@ -215,9 +215,9 @@ export default {
 }
 
 .plant {
-  flex: 0 1 calc(33% - 20px);
+  flex: 0 1 calc(25% - 20px);
   position: relative;
-  height: 500px;
+  height: 400px;
   margin: 0 5px;
   border-radius: 15px;
   overflow: hidden;

@@ -1,8 +1,8 @@
 <template>
   <div class="fame-container">
-    <ul>
-      <li v-for="plant in sortPlants" :key="plant._id">
-        <fameCard :plant="plant" />
+    <ul class="famePlant-list">
+      <li v-for="(plant, index) in sortPlants" :key="plant._id">
+        <fameCard :plant="plant" :index="index" />
       </li>
     </ul>
   </div>
@@ -33,18 +33,46 @@ export default {
 </script>
 <style lang="scss" scoped>
 .fame-container {
-  margin-top: 70px;
+  margin-top: 170px;
   display: flex;
-  justify-content: center;
+  // min-height: 100vh;
+  width: 100vw;
   align-items: center;
-  min-height: 100vh;
+  justify-content: center;
 }
-ul {
+.famePlant-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 75%;
+  margin: 0;
+  padding: 0;
 }
 li {
   font-size: 2rem;
   list-style: none;
+  flex-basis: calc(25% - 30px);
+  margin: 15px;
+}
+li:nth-child(1),
+li:nth-child(2),
+li:nth-child(3) {
+  flex-basis: calc(33% - 30px);
+  border-radius: 45px;
+  height: 250px;
+}
+li:nth-child(1) > .card > .card-place {
+  background: red;
+}
+
+li:nth-child(1) {
+  border: 9px solid gold;
+}
+
+li:nth-child(2) {
+  border: 9px solid silver;
+}
+li:nth-child(3) {
+  border: 9px solid #ec855c;
 }
 </style>
