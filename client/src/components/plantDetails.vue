@@ -5,7 +5,7 @@
         <div class="details-header-login">
           <img
             class="comment-profile-picture rounded-circle mr-2"
-            :src="plant.owner.profilePicture"
+            :src="getImgUrl(plant.owner.profilePicture)"
             alt="user image"
           /><span>{{ plant.owner.login }}</span>
         </div>
@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="details-img">
-        <img :src="getImgUrl" alt="plant image" />
+        <img :src="getImgUrl(plant.image)" alt="plant image" />
       </div>
 
       <div class="details-user">
@@ -28,7 +28,7 @@
 
       <div class="details-describe">
         <div class="details-describe-item">
-          <v-icon>mdi-cannabis</v-icon>
+          <v-icon>mdi-sprout</v-icon>
           {{ plant.type }}
         </div>
         <div class="details-describe-item">
@@ -102,15 +102,21 @@ export default {
     plantId() {
       return this.$route.params.id;
     },
-    getImgUrl() {
-      return `${API_URL}/images/${this.plant.image}`;
-    },
+    // getImgUrl(photo) {
+    //   return `${API_URL}/images/${photo}`;
+    // },
   },
   async created() {
     await this.getPlant();
   },
 
   methods: {
+    getImgUrl(photo) {
+      if (!photo) {
+        return `${API_URL}/images/default-user.png`;
+      }
+      return `${API_URL}/images/${photo}`;
+    },
     async getPlant() {
       await axios.get(`${API_URL}/plant/${this.plantId}`).then((res) => {
         console.log(res.data);

@@ -2,7 +2,7 @@
   <div class="d-flex">
     <img
       class="comment-profile-picture"
-      :src="comment.owner.profilePicture"
+      :src="getImgUrl(comment.owner.profilePicture)"
       alt="user image"
     />
     <!-- <transition name="fade"> -->
@@ -54,6 +54,7 @@
 <script>
 import moment from "moment";
 import { mapGetters } from "vuex";
+import API_URL from "../../api";
 export default {
   props: {
     comment: {
@@ -79,6 +80,12 @@ export default {
   },
 
   methods: {
+    getImgUrl(photo) {
+      if (!photo) {
+        return `${API_URL}/images/default-user.png`;
+      }
+      return `${API_URL}/images/${photo}`;
+    },
     createDate() {
       return moment(this.comment.create_date).format(" D-MM-YYYY , HH:mm:ss");
     },

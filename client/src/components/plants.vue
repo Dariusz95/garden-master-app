@@ -135,7 +135,7 @@ export default {
       } catch (err) {
         console.log(err);
       }
-      if (!this.errLike) this.fetchPlants();
+      // if (!this.errLike) this.fetchPlants();
     },
   },
   async created() {
@@ -224,16 +224,6 @@ export default {
   margin: 10px 10px;
   box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
 }
-
-// .fade-enter-active,
-// .fade-leave-active {
-//   transition: opacity 0.3s ease;
-// }
-
-// .fade-enter-from,
-// .fade-leave-to {
-//   opacity: 0;
-// }
 
 .fade-out-in-enter-active,
 .fade-out-in-leave-active {

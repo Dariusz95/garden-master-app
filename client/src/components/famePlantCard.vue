@@ -23,7 +23,7 @@ export default {
       required: true,
     },
   },
-  name: "fameCard",
+  name: "famePlantCard",
   data: () => {
     return {};
   },
@@ -39,12 +39,11 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-
+  transition: transform 0.3s;
   > img {
-    height: 150px;
+    height: 250px;
     width: 100%;
   }
-
   &-place {
     position: absolute;
     width: 40px;
@@ -58,17 +57,18 @@ export default {
     align-items: center;
     transform: translate(-50%, -50%);
   }
-
   &-describe {
     flex-grow: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 5px 10px;
-
     &-item {
       display: block;
     }
   }
+}
+.card:hover {
+  transform: scale(1.05);
 }
 </style>

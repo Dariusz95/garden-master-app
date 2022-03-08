@@ -27,7 +27,8 @@
       tag="span"
     >
       <div class="navbar-account">
-        <img :src="user.profilePicture" alt="user image" />
+        <img :src="getImgUrl(user.profilePicture)" alt="user image" />
+
         <div class="navbar-account-login">{{ user.login }}</div>
       </div>
     </router-link>
@@ -36,6 +37,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import API_URL from "../../api";
 export default {
   name: "navbar",
   computed: {
@@ -43,6 +45,17 @@ export default {
       isAuth: "isAuthenticated",
       user: "getCurrentUser",
     }),
+    // getImgUrl() {
+    //   return `${API_URL}/images/${this.user.profilePicture}`;
+    // },
+  },
+  methods: {
+    getImgUrl(photo) {
+      if (!photo) {
+        return `${API_URL}/images/default-user.png`;
+      }
+      return `${API_URL}/images/${photo}`;
+    },
   },
 };
 </script>

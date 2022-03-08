@@ -85,10 +85,6 @@ export default {
     };
   },
   methods: {
-    ...mapActions({
-      //   registerUser: "register",
-    }),
-
     async register() {
       if (this.password === this.confirmPassword) {
         await axios
