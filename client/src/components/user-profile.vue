@@ -193,6 +193,7 @@ export default {
     rgba(122, 209, 33, 0.6530987394957983) 50%,
     rgba(33, 209, 71, 0.6615021008403361) 100%
   );
+  padding-top: 100px;
 }
 .row {
   display: flex;

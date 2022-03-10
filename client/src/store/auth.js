@@ -7,6 +7,7 @@ const state = {
   refreshToken: null,
   isAuthenticated: false,
   currentUser: {},
+  errorLogin: "",
 };
 
 const getters = {
@@ -21,6 +22,9 @@ const getters = {
   },
   getCurrentUser(state) {
     return state.currentUser;
+  },
+  getErrorLogin(state) {
+    return state.errorLogin;
   },
 };
 
@@ -40,6 +44,9 @@ const mutations = {
   setCurrentUser(state, user) {
     state.currentUser = user;
   },
+  setErrorLogin(state, error) {
+    state.errorLogin = error;
+  },
 };
 
 const actions = {
@@ -56,6 +63,7 @@ const actions = {
       context.commit("setAccessToken", null);
       context.commit("setRefreshToken", null);
       context.commit("setAuthenticated", false);
+      context.commit("setErrorLogin", err.response.data);
     }
   },
   async logout(context) {

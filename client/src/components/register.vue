@@ -12,55 +12,86 @@
 
         <div class="register-form__input">
           <input
+            :class="{ error: this.loginError }"
             v-model="login"
             type="text"
-            name="register"
             required
             placeholder="LOGIN"
-            @click="badregisterOrPass = false"
+            @blur="validateLogin()"
           />
           <v-icon class="register-icon">mdi-account</v-icon>
+          <p class="error-text" v-if="this.loginError">{{ this.loginError }}</p>
         </div>
 
         <div class="register-form__input">
           <input
+            :class="{ error: this.loginError || this.passwordMatch }"
             v-model="password"
             type="password"
             name="password"
             required
             placeholder="HASŁO"
+            @blur="
+              ifPasswordMatch();
+              validatePassword();
+            "
           />
+
           <v-icon>mdi-lock-outline</v-icon>
+          <ul>
+            <li class="error-text" v-for="err in passwordErrors" :key="err.id">
+              {{ err }}
+            </li>
+          </ul>
         </div>
 
         <div class="register-form__input">
           <input
+            :class="{ error: this.passwordMatch }"
             v-model="confirmPassword"
             type="password"
             name="password"
             required
             placeholder="POWTÓRZ HASŁO"
+            @blur="ifPasswordMatch()"
           />
           <v-icon>mdi-lock-outline</v-icon>
+          <p class="error-text" v-if="this.passwordMatch">
+            Hasła się nie pokrywają
+          </p>
         </div>
         <div class="register-form__input">
           <input
+            :class="{ error: this.mailError }"
             v-model="email"
             type="text"
             name="password"
             required
             placeholder="E-MAIL"
+            @blur="validateEmail()"
           />
           <v-icon>mdi-email-outline</v-icon>
+          <p class="error-text" v-if="this.mailError">
+            {{ this.mailError }}
+          </p>
         </div>
 
-        <div class="error-text" v-if="this.badregisterOrPass">
-          Błędny register lub hasło
-        </div>
-        <div class="error-text" v-if="this.passwordNotMatch">
-          Hasła się nie pokrywają
-        </div>
-        <v-btn @click.prevent="register" id="btn"> Zarejestruj się </v-btn>
+        <v-btn
+          @click.prevent="register"
+          id="btn"
+          :disabled="
+            !this.login ||
+            !this.password ||
+            !this.confirmPassword ||
+            !this.email ||
+            this.passwordErrors.length ||
+            this.passwordMatch ||
+            this.mailError.length ||
+            this.loginError.length
+          "
+        >
+          Zarejestruj się
+        </v-btn>
         <p>
           Masz już konto?
           <router-link to="/login">Zaloguj się</router-link>
@@ -81,20 +112,75 @@ export default {
       password: "",
       confirmPassword: "",
       email: "",
-      passwordNotMatch: false,
+      passwordMatch: false,
+      loginError: "",
+      passwordErrors: [],
+      mailError: "",
     };
   },
+  computed: {},
   methods: {
-    async register() {
-      if (this.password === this.confirmPassword) {
-        await axios
-          .post(`${API_URL}/register`, {
-            login: this.login,
-            email: this.email,
-            password: this.password,
-          })
-          .catch((err) => console.log(err));
+    //add and delete errors due to argument of the function
+    validArgument(argument, errorArray, errorText) {
+      if (argument) {
+        if (!errorArray.includes(errorText)) errorArray.push(errorText);
+      } else {
+        let index = errorArray.indexOf(errorText);
+        if (index !== -1) {
+          errorArray.splice(index, 1);
+        }
       }
+    },
+    validateLogin() {
+      if (this.login.length < 4) {
+        this.loginError = "Login musi składać się z przynajmniej 4 znaków";
+      } else {
+        this.loginError = "";
+      }
+    },
+    validatePassword() {
+      this.validArgument(
+        this.password.length < 3,
+        this.passwordErrors,
+        "Hasło musi składać się z przynajmniej 3 znaków"
+      );
+
+      let hasNumber = /\d/;
+      this.validArgument(
+        !hasNumber.test(this.password),
+        this.passwordErrors,
+        "Hasło musi zawierać przynajmniej jedną cyfrę"
+      );
+    },
+    validateEmail() {
+      let validEmail =
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      if (!validEmail.test(this.email)) {
+        this.mailError = "Niepoprawny e-mail";
+      } else {
+        this.mailError = "";
+      }
+    },
+    ifPasswordMatch() {
+      console.log("je");
+      if (
+        this.password &&
+        this.confirmPassword &&
+        !(this.password === this.confirmPassword)
+      ) {
+        this.passwordMatch = true;
+      } else {
+        this.passwordMatch = false;
+      }
+    },
+    async register() {
+      await axios
+        .post(`${API_URL}/register`, {
+          login: this.login,
+          email: this.email,
+          password: this.password,
+        })
+        .catch((err) => console.log(err));
     },
   },
 };
@@ -129,7 +215,7 @@ export default {
   .register-form {
     position: relative;
     left: -150px;
-    height: 700px;
+    height: 750px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -152,6 +238,9 @@ export default {
         border-bottom: 1px solid rgba(0, 0, 0, 0.075);
         padding: 5px 0 5px 35px;
       }
+      input.error {
+        border-bottom: 1px solid rgb(211, 4, 4);
+      }
       input::placeholder {
         // text-align: center;
       }
@@ -168,6 +257,9 @@ export default {
       border-radius: 15px;
       font-size: 1.4rem;
       background: $base-color;
+    }
+    .error-text {
+      color: red;
     }
   }
 }

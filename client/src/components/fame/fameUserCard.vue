@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-import API_URL from "../../api";
+import API_URL from "../../../api";
 export default {
   name: "fameUserCard",
   props: {

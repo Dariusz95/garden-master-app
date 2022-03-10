@@ -33,8 +33,9 @@
 import { mapGetters, mapActions } from "vuex";
 import famePlantCard from "./famePlantCard.vue";
 import fameUserCard from "./fameUserCard.vue";
-import API_URL from "../../api";
-import http from "../http";
+// import API_URL from "../../../api";
+import API_URL from "../../../api";
+import http from "../../http";
 export default {
   components: { famePlantCard, fameUserCard },
   name: "fame",
@@ -90,7 +91,13 @@ export default {
   flex-direction: column;
   background: #f6f6f6;
   padding-top: 100px;
-  background-image: url("../assets/img/fame-bcg.jpg");
+  // background-image: url("../assets/img/fame-bcg.jpg");
+  background-image: linear-gradient(
+      to right,
+      rgb(75 75 75 / 30%),
+      rgb(0 0 0 / 8%)
+    ),
+    url("../../assets/img/fame-bcg.jpg");
   background-size: cover;
   background-attachment: fixed;
 }
@@ -123,7 +130,7 @@ li {
 .fameUsers-list {
   > li:nth-child(1) {
     .user-card {
-      box-shadow: 1px 1px 24px -7px rgba(255, 215, 0, 1);
+      box-shadow: 0px 0px 18px 7px gold;
       &-img {
         .userPlace-img {
           background: yellow;
@@ -133,7 +140,7 @@ li {
     }
   }
   > li:nth-child(2) {
-    box-shadow: 1px 1px 24px -7px rgba(128, 128, 128, 1);
+    box-shadow: 0px 0px 18px 7px rgba(128, 128, 128, 1);
     .user-card {
       &-img {
         .userPlace-img {
@@ -145,7 +152,7 @@ li {
   }
   > li:nth-child(3) {
     .user-card {
-      box-shadow: 1px 1px 24px -7px rgba(214, 93, 46, 1);
+      box-shadow: 0px 0px 18px 7px rgba(214, 93, 46, 1);
       &-img {
         .userPlace-img {
           background: #ec855c;

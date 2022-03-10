@@ -33,17 +33,20 @@
           </button>
         </v-col>
       </v-row>
-      <!-- <div class="plants"> -->
       <transition-group class="plants" tag="ul" name="fade-out-in">
         <div
           class="plant d-flex flex-row"
           v-for="plant in pageOfItems"
           :key="plant._id"
         >
-          <plant :plant="plant" :errLike="errLike" @add-like="addLike" />
+          <plant
+            :plant="plant"
+            :errLike="errLike"
+            @add-like="addLike"
+            :successAddLike="successAddLike"
+          />
         </div>
       </transition-group>
-      <!-- </div> -->
       <div class="plants-pagination">
         <jw-pagination
           :pageSize="pageSize"
@@ -73,6 +76,7 @@ export default {
       selected_type: "",
       pageSize: null || 4,
       selected_kind: "",
+      successAddLike: false,
     };
   },
   computed: {
@@ -124,6 +128,12 @@ export default {
           .post(`${API_URL}/plant/like`, {
             _id: id,
           })
+          .then(function (response) {
+            if (response.status == 200) {
+              console.log("success", response.status);
+              self.successAddLike = true;
+            }
+          })
           .catch(function (error) {
             if (error.response) {
               self.isError = true;
@@ -133,9 +143,8 @@ export default {
             }
           });
       } catch (err) {
-        console.log(err);
+        console.log("rrr", err);
       }
-      // if (!this.errLike) this.fetchPlants();
     },
   },
   async created() {

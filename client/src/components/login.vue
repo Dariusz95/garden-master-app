@@ -17,7 +17,7 @@
             name="login"
             required
             placeholder="LOGIN"
-            @click="badLoginOrPass = false"
+            @click="errLogin = ''"
           />
           <v-icon class="login-icon">mdi-account</v-icon>
         </div>
@@ -28,13 +28,11 @@
             name="password"
             required
             placeholder="HASŁO"
-            @click="badLoginOrPass = false"
+            @click="errLogin = ''"
           />
           <v-icon>mdi-lock-outline</v-icon>
         </div>
-        <!-- <div class="error-text" v-if="this.badLoginOrPass">
-          Błędny login lub hasło
-        </div> -->
+        <span class="errMessage">{{ errLogin }}</span>
         <v-btn
           :disabled="!this.login || !this.password"
           @click.prevent="submitUser"
@@ -53,7 +51,7 @@
 <script>
 import axios from "axios";
 import API_URL from "../../api";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import Router from "vue-router";
 export default {
   name: "login",
@@ -61,7 +59,12 @@ export default {
     return {
       login: "",
       password: "",
+      errLogin: "",
     };
+  },
+  computed: {
+    ...mapGetters(["getErrorLogin"]),
+    ...mapGetters(["isAuthenticated"]),
   },
   methods: {
     ...mapActions({
@@ -69,16 +72,21 @@ export default {
     }),
 
     async submitUser() {
+      self = this;
       const { login, password } = this;
-      await this.loginUser({ login, password });
-      this.$router.push({ name: "home" });
-
-      // await axios
-      //   .post(`${API_URL}login`, {
-      //     login: this.login,
-      //     password: this.password,
-      //   })
-      //   .then((res) => console.log(res.data));
+      await this.loginUser({ login, password })
+        .then(() => {
+          if (this.isAuthenticated)
+            this.$router.push({ name: "home" }).then(() => {
+              self.errorMessage();
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      if (this.getErrorLogin === "Login or password is wrong") {
+        this.errLogin = "Błędny login lub hasło";
+      }
     },
   },
 };
@@ -150,6 +158,10 @@ export default {
       border-radius: 15px;
       font-size: 1.4rem;
       background: $base-color;
+    }
+    .errMessage {
+      font-size: 1.7rem;
+      color: red;
     }
   }
 }

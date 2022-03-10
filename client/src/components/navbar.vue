@@ -20,41 +20,60 @@
     <router-link v-if="!isAuth" class="navbar-item btn" to="/login" tag="span">
       <button class="btn btn-primary">Zaloguj się</button>
     </router-link>
-    <router-link
-      v-if="isAuth"
-      class="navbar-item account d-flex"
-      to="/edit"
-      tag="span"
-    >
-      <div class="navbar-account">
+    <div v-if="isAuth" class="navbar-item account d-flex" to="/edit" tag="span">
+      <div
+        class="navbar-account"
+        @click="accountMenuActive = !accountMenuActive"
+      >
         <img :src="getImgUrl(user.profilePicture)" alt="user image" />
 
         <div class="navbar-account-login">{{ user.login }}</div>
+        <ul
+          :class="{ active: this.accountMenuActive }"
+          class="navbar-account-menu"
+        >
+          <router-link class="account-menu" to="/edit" tag="li">
+            <v-icon class="account-menu-icon">mdi-account-cog</v-icon>
+            <span class="account-menu-text">Edytuj profil</span>
+          </router-link>
+          <li class="account-menu" @click="logout">
+            <v-icon class="account-menu-icon">mdi-logout</v-icon>
+            <span class="account-menu-text">Wyloguj się</span>
+          </li>
+        </ul>
       </div>
-    </router-link>
+    </div>
   </nav>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import Router from "vue-router";
+import { mapGetters, mapActions } from "vuex";
 import API_URL from "../../api";
 export default {
   name: "navbar",
+  data() {
+    return {
+      accountMenuActive: false,
+    };
+  },
   computed: {
     ...mapGetters({
       isAuth: "isAuthenticated",
       user: "getCurrentUser",
     }),
-    // getImgUrl() {
-    //   return `${API_URL}/images/${this.user.profilePicture}`;
-    // },
   },
   methods: {
+    ...mapActions({ logOut: "logout" }),
     getImgUrl(photo) {
       if (!photo) {
         return `${API_URL}/images/default-user.png`;
       }
       return `${API_URL}/images/${photo}`;
+    },
+    logout() {
+      this.logOut();
+      this.$router.push({ name: "home" });
     },
   },
 };
@@ -65,7 +84,7 @@ export default {
 nav {
   line-height: 60px;
   z-index: 10;
-  font-size: 1.6rem;
+  font-size: 1.9rem;
   .navbar {
     &__logo {
     }
@@ -75,17 +94,50 @@ nav {
   }
   .navbar-item.btn {
     padding: 0 40px;
+    .btn {
+      color: #fff;
+      background-color: $base-color;
+      padding: 6px 20px;
+      font-size: 1.6rem;
+      border-radius: 15px;
+    }
   }
   .navbar-item.account {
     padding: 0 40px;
-
     .navbar-account {
       display: flex;
       align-items: center;
+      position: relative;
+      cursor: pointer;
+      .navbar-account-menu {
+        position: absolute;
+        top: 100%;
+        display: block;
+        width: 200px;
+        left: -100%;
+        border: 1px solid black;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        padding: 5px 10px;
+        background: #fff;
+        display: none;
+        .account-menu {
+          &-icon {
+            padding: 0 5px;
+          }
+        }
+        .account-menu:first-child {
+          border-bottom: 2px solid $base-color;
+        }
+      }
+      .navbar-account-menu.active {
+        display: block;
+      }
     }
     .navbar-account > img {
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       border-radius: 90px;
       margin-right: 10px;
     }

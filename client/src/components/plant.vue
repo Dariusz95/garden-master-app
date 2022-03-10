@@ -6,7 +6,7 @@
     <div class="plant__describe">
       <div class="plant__describe_like">
         <div class="plant__describe_like-item">
-          <span>{{ plant.like.length }}</span>
+          <span>{{ amountLikes }}</span>
           <span>ilość polubień</span>
         </div>
         <div class="plant__describe_like-item">
@@ -46,15 +46,25 @@ export default {
       type: String,
       required: true,
     },
+    successAddLike: {
+      type: Boolean,
+    },
   },
   computed: {
     getImgUrl() {
       return `${API_URL}/images/${this.plant.image}`;
     },
+    amountLikes() {
+      if (this.successAddLike) {
+        console.log("success likes");
+        return this.plant.like.length + 1;
+      }
+      return this.plant.like.length;
+    },
   },
   methods: {
-    likeUp(id, e) {
-      this.$emit("add-like", id, e);
+    likeUp(id) {
+      this.$emit("add-like", id);
       this.isActive = true;
       setTimeout(() => {
         this.isActive = false;
