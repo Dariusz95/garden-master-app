@@ -197,6 +197,16 @@ export default {
     z-index: 5;
   }
 }
+.createForm::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: $base-color;
+  z-index: -5;
+}
 
 @keyframes bcg-animation {
   0% {

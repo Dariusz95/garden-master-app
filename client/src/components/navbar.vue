@@ -3,7 +3,8 @@
     class="vw-100 top-0 p-0 position-fixed d-flex justify-content-between align-items-center"
   >
     <div class="navbar d-flex">
-      <div class="navbar-item logo">Garden Master</div>
+      <div class="navbar-item logo"></div>
+      <img src="../assets/img/garden-logo.png" alt="" />
       <router-link class="navbar-item" to="/" tag="span">
         <span>Strona główna </span>
       </router-link>
@@ -86,7 +87,9 @@ nav {
   z-index: 10;
   font-size: 1.9rem;
   .navbar {
-    &__logo {
+    img {
+      width: 200px;
+      height: 100%;
     }
   }
   .navbar-item {
