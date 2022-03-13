@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100 d-flex flex-column position-relative">
+  <div class="w-100 d-flex flex-column position-relative" @click="checkIndex()">
     <div v-if="errLike" :class="{ errorPlant: isActive }"></div>
     <img :src="getImgUrl" alt="plant image" />
 
@@ -34,6 +34,7 @@ export default {
   data: () => {
     return {
       isActive: false,
+      clickedId: null,
     };
   },
   props: {
@@ -49,6 +50,7 @@ export default {
     successAddLike: {
       type: Boolean,
     },
+    // index,
   },
   computed: {
     getImgUrl() {
@@ -57,14 +59,22 @@ export default {
     amountLikes() {
       if (this.successAddLike) {
         console.log("success likes");
-        return this.plant.like.length + 1;
+        if (this.plant._id === this.clickedId) {
+          return this.plant.like.length + 1;
+        }
       }
       return this.plant.like.length;
     },
   },
   methods: {
+    checkIndex() {
+      // console.log(this.index);
+      // console.log(this.plant._id);
+    },
     likeUp(id) {
       this.$emit("add-like", id);
+      this.clickedId = id;
+      console.log(id);
       this.isActive = true;
       setTimeout(() => {
         this.isActive = false;

@@ -1,11 +1,19 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 html {
-  font: 62.5% / 1.15 sans-serif;
+  font-size: 62.5%;
+  // overflow-x: hidden;
+}
+* {
+  font-family: "Roboto", sans-serif;
 }
 body {
+  // overflow-x: hidden;
+  overflow: hidden;
   // padding-top: 70px;
 }
 // $base-color: #4dc0b5;

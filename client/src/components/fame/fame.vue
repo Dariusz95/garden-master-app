@@ -12,7 +12,7 @@
       </div>
 
       <ul v-if="selected_ranking === fameSelect[0]" class="famePlant-list">
-        <li v-for="(plant, index) in sortPlants" :key="plant._id">
+        <li v-for="(plant, index) in sortPlants" :key="index">
           <famePlantCard :plant="plant" :index="index" />
         </li>
       </ul>
@@ -26,6 +26,13 @@
           <fameUserCard :user="user" :index="index" />
         </li>
       </ul>
+      <!-- <div class="fame-pagination">
+        <jw-pagination
+          :pageSize="11"
+          :items="isSelected"
+          @changePage="onChangePage"
+        ></jw-pagination>
+      </div> -->
     </div>
   </v-app>
 </template>
@@ -33,7 +40,6 @@
 import { mapGetters, mapActions } from "vuex";
 import famePlantCard from "./famePlantCard.vue";
 import fameUserCard from "./fameUserCard.vue";
-// import API_URL from "../../../api";
 import API_URL from "../../../api";
 import http from "../../http";
 export default {
@@ -44,9 +50,18 @@ export default {
       fameSelect: ["polubień rośliny", "najaktywniejszych użytkowników"],
       selected_ranking: "" || "polubień rośliny",
       users: {},
+      // pageOfItems: [],
+      isPagination: false,
     };
   },
   computed: {
+    // isSelected() {
+    //   if (this.selected_ranking === this.fameSelect[0]) {
+    //     return this.sortPlants;
+    //   } else {
+    //     return this.sortUsers;
+    //   }
+    // },
     ...mapGetters({ plants: "getPlants" }),
     sortPlants() {
       return this.plants.sort((a, b) => b.like.length - a.like.length);
@@ -66,6 +81,10 @@ export default {
     // -------------
   },
   methods: {
+    onChangePage(pageOfItems) {
+      console.log(pageOfItems);
+      this.pageOfItems = pageOfItems;
+    },
     ...mapActions(["fetchPlants"]),
     async fetchUsers() {
       const response = await http.get(`${API_URL}/getusers`);
@@ -85,7 +104,7 @@ export default {
 }
 .fame-container {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   align-items: center;
   flex-direction: column;
@@ -208,6 +227,16 @@ li {
     .card-place {
       background: #ec855c;
       border: 3px solid #d65d2e;
+    }
+  }
+}
+.fame-pagination {
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 5rem;
+  .page-item {
+    > a {
+      border: none;
     }
   }
 }

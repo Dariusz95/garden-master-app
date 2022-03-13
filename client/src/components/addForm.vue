@@ -53,6 +53,9 @@
             :key="fileInputKey"
           />
         </div>
+        <v-alert v-if="this.ifPlantAdded" prominent type="success">
+          Roślinka dodana
+        </v-alert>
         <div class="form_buttons">
           <v-btn class="btnForm resetBtn" @click="clearForm">Reset</v-btn>
           <v-btn class="btnForm addBtn" type="submit">Wyślij</v-btn>
@@ -92,6 +95,7 @@ export default {
         "kapusta",
       ],
       fileInputKey: 0,
+      ifPlantAdded: false,
     };
   },
   computed: {
@@ -108,7 +112,10 @@ export default {
       formData.append("tips", this.tips);
 
       formData.append("image", this.file);
-      await http.post(`${API_URL}/plant`, formData);
+      await http.post(`${API_URL}/plant`, formData).then((res) => {
+        this.clearForm();
+        this.ifPlantAdded = true;
+      });
     },
     clearForm() {
       this.kind = "";

@@ -72,13 +72,13 @@ export default {
     }),
 
     async submitUser() {
-      self = this;
+      // var self = this;
       const { login, password } = this;
       await this.loginUser({ login, password })
         .then(() => {
           if (this.isAuthenticated)
             this.$router.push({ name: "home" }).then(() => {
-              self.errorMessage();
+              // self.errorMessage();
             });
         })
         .catch((err) => {

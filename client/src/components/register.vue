@@ -1,104 +1,117 @@
 <template>
-  <transition name="component-fade" mode="out-in">
-    <div
-      class="register-page position-relative d-flex justify-content-evenly align-items-center"
-    >
-      <div class="register-img"></div>
-      <img src="../assets/img/wave.png" alt="" srcset="" />
+  <v-app>
+    <transition name="component-fade" mode="out-in">
+      <div
+        class="register-page position-relative d-flex justify-content-evenly align-items-center"
+      >
+        <div class="register-img"></div>
+        <img src="../assets/img/wave.png" alt="" srcset="" />
 
-      <form class="register-form">
-        <img src="../assets/img/logo-login.png" alt="" srcset="" />
-        <h1>ZAREJESTRUJ SIĘ</h1>
+        <form class="register-form">
+          <img src="../assets/img/logo-login.png" alt="" srcset="" />
+          <h1>ZAREJESTRUJ SIĘ</h1>
 
-        <div class="register-form__input">
-          <input
-            :class="{ error: this.loginError }"
-            v-model="login"
-            type="text"
-            required
-            placeholder="LOGIN"
-            @blur="validateLogin()"
-          />
-          <v-icon class="register-icon">mdi-account</v-icon>
-          <p class="error-text" v-if="this.loginError">{{ this.loginError }}</p>
-        </div>
+          <div class="register-form__input">
+            <input
+              :class="{ error: this.loginError }"
+              v-model="login"
+              type="text"
+              required
+              placeholder="LOGIN"
+              @onchange="clearError()"
+              @blur="validateLogin()"
+            />
+            <v-icon class="register-icon">mdi-account</v-icon>
+            <p class="error-text" v-if="this.loginError">
+              {{ this.loginError }}
+            </p>
+          </div>
 
-        <div class="register-form__input">
-          <input
-            :class="{ error: this.loginError || this.passwordMatch }"
-            v-model="password"
-            type="password"
-            name="password"
-            required
-            placeholder="HASŁO"
-            @blur="
-              ifPasswordMatch();
-              validatePassword();
+          <div class="register-form__input">
+            <input
+              :class="{ error: this.loginError || this.passwordMatch }"
+              v-model="password"
+              type="password"
+              name="password"
+              required
+              placeholder="HASŁO"
+              @blur="
+                ifPasswordMatch();
+                validatePassword();
+              "
+            />
+
+            <v-icon>mdi-lock-outline</v-icon>
+            <ul>
+              <li
+                class="error-text"
+                v-for="err in passwordErrors"
+                :key="err.id"
+              >
+                {{ err }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="register-form__input">
+            <input
+              :class="{ error: this.passwordMatch }"
+              v-model="confirmPassword"
+              type="password"
+              name="password"
+              required
+              placeholder="POWTÓRZ HASŁO"
+              @blur="ifPasswordMatch()"
+            />
+            <v-icon>mdi-lock-outline</v-icon>
+            <p class="error-text" v-if="this.passwordMatch">
+              Hasła się nie pokrywają
+            </p>
+          </div>
+          <div class="register-form__input">
+            <input
+              :class="{ error: this.mailError }"
+              v-model="email"
+              type="text"
+              name="password"
+              required
+              placeholder="E-MAIL"
+              @blur="validateEmail()"
+            />
+            <v-icon>mdi-email-outline</v-icon>
+            <p class="error-text" v-if="this.mailError">
+              {{ this.mailError }}
+            </p>
+          </div>
+
+          <v-alert v-if="this.registerError" shaped prominent type="error">
+            {{ this.registerError }}
+          </v-alert>
+          <v-alert v-if="this.registerSuccess" prominent type="success">
+            Użytkownik {{ this.login }} został utworzony
+          </v-alert>
+
+          <v-btn
+            @click.prevent="register"
+            id="btn"
+            :disabled="
+              !this.login ||
+              !this.password ||
+              !this.confirmPassword ||
+              !this.email ||
+              this.passwordMatch
             "
-          />
-
-          <v-icon>mdi-lock-outline</v-icon>
-          <ul>
-            <li class="error-text" v-for="err in passwordErrors" :key="err.id">
-              {{ err }}
-            </li>
-          </ul>
-        </div>
-
-        <div class="register-form__input">
-          <input
-            :class="{ error: this.passwordMatch }"
-            v-model="confirmPassword"
-            type="password"
-            name="password"
-            required
-            placeholder="POWTÓRZ HASŁO"
-            @blur="ifPasswordMatch()"
-          />
-          <v-icon>mdi-lock-outline</v-icon>
-          <p class="error-text" v-if="this.passwordMatch">
-            Hasła się nie pokrywają
+          >
+            Zarejestruj się
+          </v-btn>
+          <p>
+            Masz już konto?
+            <router-link to="/login">Zaloguj się</router-link>
           </p>
-        </div>
-        <div class="register-form__input">
-          <input
-            :class="{ error: this.mailError }"
-            v-model="email"
-            type="text"
-            name="password"
-            required
-            placeholder="E-MAIL"
-            @blur="validateEmail()"
-          />
-          <v-icon>mdi-email-outline</v-icon>
-          <p class="error-text" v-if="this.mailError">
-            {{ this.mailError }}
-          </p>
-        </div>
-
-        <v-btn
-          @click.prevent="register"
-          id="btn"
-          :disabled="
-            !this.login ||
-            !this.password ||
-            !this.confirmPassword ||
-            !this.email ||
-            this.passwordErrors.length ||
-            this.passwordMatch ||
-            this.mailError.length ||
-            this.loginError.length
-          "
-        >
-          Zarejestruj się
-        </v-btn>
-        <p>
-          Masz już konto?
-          <router-link to="/login">Zaloguj się</router-link>
-        </p>
-      </form>
-    </div>
-  </transition>
+        </form>
+      </div>
+    </transition>
+  </v-app>
 </template>
 <script>
 import axios from "axios";
@@ -116,10 +129,16 @@ export default {
       loginError: "",
       passwordErrors: [],
       mailError: "",
+      registerError: "",
+      registerSuccess: false,
     };
   },
   computed: {},
   methods: {
+    clearError() {
+      console.log("czysci?");
+      this.registerError = "";
+    },
     //add and delete errors due to argument of the function
     validArgument(argument, errorArray, errorText) {
       if (argument) {
@@ -132,6 +151,7 @@ export default {
       }
     },
     validateLogin() {
+      this.registerError = "";
       if (this.login.length < 4) {
         this.loginError = "Login musi składać się z przynajmniej 4 znaków";
       } else {
@@ -153,6 +173,12 @@ export default {
       );
     },
     validateEmail() {
+      this.registerError = "";
+      console.log(
+        this.passwordErrors.length,
+        this.mailError.length,
+        this.loginError.length
+      );
       let validEmail =
         /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       if (!validEmail.test(this.email)) {
@@ -173,6 +199,12 @@ export default {
         this.passwordMatch = false;
       }
     },
+    clearInputs() {
+      (this.login = ""),
+        (this.password = ""),
+        (this.confirmPassword = ""),
+        (this.email = "");
+    },
     async register() {
       await axios
         .post(`${API_URL}/register`, {
@@ -180,7 +212,17 @@ export default {
           email: this.email,
           password: this.password,
         })
-        .catch((err) => console.log(err));
+        .then((res) => {
+          this.clearInputs();
+          if (res.status === 201 && res.statusText === "Created") {
+            this.registerSuccess = true;
+          }
+        })
+        .catch((err) => {
+          if (err.response) {
+            this.registerError = err.response.data;
+          }
+        });
     },
   },
 };

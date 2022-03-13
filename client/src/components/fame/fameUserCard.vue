@@ -35,12 +35,14 @@ export default {
   },
   computed: {
     classObject() {
-      console.log(![0, 1, 2].indexOf(this.index) < 0);
+      // console.log("index", this.index);
+      // console.log(![0, 1, 2].indexOf(this.index) < 0);
       return {
         active: [0, 1, 2].indexOf(this.index) < 0,
       };
     },
     addingPlantAmount() {
+      console.log(this.user.plants.length);
       return this.user.plants.length;
     },
     addingCommentAmount() {

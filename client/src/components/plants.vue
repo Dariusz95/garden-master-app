@@ -36,7 +36,7 @@
       <transition-group class="plants" tag="ul" name="fade-out-in">
         <div
           class="plant d-flex flex-row"
-          v-for="plant in pageOfItems"
+          v-for="(plant, index) in pageOfItems"
           :key="plant._id"
         >
           <plant
@@ -44,6 +44,7 @@
             :errLike="errLike"
             @add-like="addLike"
             :successAddLike="successAddLike"
+            :index="index"
           />
         </div>
       </transition-group>
@@ -109,7 +110,6 @@ export default {
   methods: {
     ...mapActions(["fetchPlants"]),
     onChangePage(pageOfItems) {
-      console.log("poszl");
       this.pageOfItems = pageOfItems;
     },
 
@@ -122,8 +122,9 @@ export default {
     },
 
     async addLike(id) {
+      console.log(id);
       try {
-        let self = this;
+        var self = this;
         await http
           .post(`${API_URL}/plant/like`, {
             _id: id,
@@ -132,6 +133,7 @@ export default {
             if (response.status == 200) {
               console.log("success", response.status);
               self.successAddLike = true;
+              this.successAddLike = true;
             }
           })
           .catch(function (error) {
@@ -160,7 +162,13 @@ export default {
   top: 80px;
   width: 80%;
   margin: 0 auto;
-  height: calc(100vh - 80px);
+  background-image: url(/img/plant-bcg.74f9e533.png);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  min-height: calc(130vh - 80px);
+  padding: 20px;
+
+  border: 1;
   .row {
     margin: 0;
   }

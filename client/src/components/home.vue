@@ -169,9 +169,14 @@ export default {
     plants,
     textTop: "",
   },
-  created() {
+  mounted() {
     window.addEventListener("scroll", this.getTopScreen);
-    // this.onResize();
+    this.$once("hook:destroyed", () => {
+      window.removeEventListener("scroll", this.getTopScreen);
+    });
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
     parallax(e) {
@@ -231,6 +236,7 @@ export default {
 @import "../assets/styles/_main.scss";
 .home {
   min-height: 100vh;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
