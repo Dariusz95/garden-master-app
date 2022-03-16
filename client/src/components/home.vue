@@ -37,94 +37,99 @@
         </v-col>
       </v-row>
     </div>
-    <v-row class="about">
+
+    <div class="about">
       <div class="about-dark-bcg"></div>
-      <v-col class="about-text">
+      <div class="about-text">
         Miusto qui nemo quod molestiae quidem impedit accusamus voluptatibus
         doloribus incidunt sint explicabo magnam! Optio tempora quidem amet
         libero in esse aut. Necessitatibus voluptates, iste nemo debitis
         explicabo iusto eaque odio repellat. Cumque, sequi corrupti! Deleniti
         totam eos optio impedit accusamus, amet numquam modi consequuntur
-      </v-col>
-      <v-col class="about-img"></v-col>
-    </v-row>
-    <div class="parralax-text">Dziel się swoją pasją</div>
+      </div>
+      <div class="about-img">
+        <img src="../assets/img/about-img.png" />
+      </div>
+    </div>
+
     <div class="parallax-container">
-      <div class="parallax" @mousemove="parallax($event)">
+      <div class="parallax-background"></div>
+      <!-- <div class="parallax" @mousemove="parallax($event)"> -->
+      <div class="parallax" @wheel="parallax($event)">
         <img
           src="../assets/img/parallax-img/1.png"
-          class="layer"
-          data-speed="-5"
-        />
-        <img
-          src="../assets/img/parallax-img/2.png"
-          class="layer"
-          data-speed="2"
-        />
-        <img
-          src="../assets/img/parallax-img/3.png"
-          class="layer"
-          data-speed="4"
-        />
-        <img
-          src="../assets/img/parallax-img/4.png"
-          class="layer"
-          data-speed="-3"
-        />
-        <img
-          src="../assets/img/parallax-img/5.png"
-          class="layer"
-          data-speed="7"
-        />
-        <img
-          src="../assets/img/parallax-img/6.png"
-          class="layer"
-          data-speed="-2"
-        />
-        <img
-          src="../assets/img/parallax-img/7.png"
-          class="layer"
-          data-speed="9"
-        />
-        <img
-          src="../assets/img/parallax-img/8.png"
           class="layer"
           data-speed="1"
         />
         <img
+          src="../assets/img/parallax-img/2.png"
+          class="layer"
+          data-speed="50"
+        />
+        <img
+          src="../assets/img/parallax-img/3.png"
+          class="layer"
+          data-speed="2"
+        />
+        <img
+          src="../assets/img/parallax-img/4.png"
+          class="layer"
+          data-speed="47"
+        />
+        <img
+          src="../assets/img/parallax-img/5.png"
+          class="layer"
+          data-speed="3"
+        />
+        <img
+          src="../assets/img/parallax-img/6.png"
+          class="layer"
+          data-speed="25"
+        />
+        <img
+          src="../assets/img/parallax-img/7.png"
+          class="layer"
+          data-speed="25"
+        />
+        <img
+          src="../assets/img/parallax-img/8.png"
+          class="layer"
+          data-speed="2"
+        />
+        <img
           src="../assets/img/parallax-img/9.png"
           class="layer"
-          data-speed="-2"
+          data-speed="73"
         />
         <img
           src="../assets/img/parallax-img/10.png"
           class="layer"
-          data-speed="5"
+          data-speed="15"
         />
         <img
           src="../assets/img/parallax-img/11.png"
           class="layer"
-          data-speed="-7"
+          data-speed="5"
         />
         <img
           src="../assets/img/parallax-img/12.png"
           class="layer"
-          data-speed="8"
+          data-speed="38"
         />
         <img
           src="../assets/img/parallax-img/13.png"
           class="layer"
-          data-speed="11"
+          data-speed="15"
         />
         <img
           src="../assets/img/parallax-img/14.png"
           class="layer"
-          data-speed="-3"
+          data-speed="3"
         />
         <img
           src="../assets/img/parallax-img/15.png"
           class="layer"
-          data-speed="6"
+          data-speed="36"
         />
         <img
           src="../assets/img/parallax-img/16.png"
@@ -137,6 +142,7 @@
           data-speed="6"
         />
       </div>
+      <div class="parralax-text">Dziel się swoją pasją</div>
     </div>
     <div class="footer">
       <v-row>
@@ -151,10 +157,10 @@
             <span>Pochwal się</span>
           </router-link>
         </v-col>
-        <v-col>
-          <div class="logo-img">
-            <img src="../assets/img/garden-logo-white.png" alt="" />
-          </div>
+        <v-col class="logo-img">
+          <!-- <div class="logo-img"> -->
+          <img src="../assets/img/garden-logo-white.png" alt="" />
+          <!-- </div> -->
         </v-col>
       </v-row>
       <div class="footer-author">Created by Dariusz Bosko</div>
@@ -174,20 +180,31 @@ export default {
     this.$once("hook:destroyed", () => {
       window.removeEventListener("scroll", this.getTopScreen);
     });
+
+    window.addEventListener("scroll", this.parallax);
   },
   destroyed() {
     window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
     parallax(e) {
-      const target = e.target.offsetParent;
-      target.querySelectorAll(".layer").forEach((layer) => {
-        const speed = layer.getAttribute("data-speed");
+      const parallaxCont = document.querySelector(".parallax-container");
+      const paraImgs = document.querySelectorAll(".layer");
 
-        const x = (window.innerWidth - e.pageX * speed) / 100;
-        const y = (window.innerHeight - e.pageY * speed) / 200;
+      const text = document.querySelector(".parralax-text");
 
-        layer.style.transform = `translateX(${x}px) translateY(${y}px)`;
+      paraImgs.forEach((layer) => {
+        const parallaxContTop = parallaxCont.getBoundingClientRect().top;
+        let windowHeight = window.innerHeight;
+        let speed = layer.getAttribute("data-speed");
+        if (parallaxContTop < windowHeight) {
+          text.style.color =
+            "#" + ((Math.random() * 0xffffff) << 0).toString(16);
+
+          layer.style.top = `-${parallaxContTop / 6.5 + parseInt(speed)}px`;
+        } else {
+          layer.style.top = 0 + "px";
+        }
       });
     },
     getTopScreen() {
@@ -206,29 +223,6 @@ export default {
         element.classList.remove("active");
       }
     },
-
-    // handleAboutText() {
-    //   const text = document.querySelector(".about-text");
-    //   let windowHeight = window.innerHeight;
-    //   let textTop = text.getBoundingClientRect().top;
-    //   let revealPoint = 10;
-    //   if (textTop < windowHeight - revealPoint) {
-    //     text.classList.add("active");
-    //   } else {
-    //     text.classList.remove("active");
-    //   }
-    // },
-    // handleAboutImg() {
-    //   const img = document.querySelector(".about-img");
-    //   let windowHeight = window.innerHeight;
-    //   let textTop = img.getBoundingClientRect().top;
-    //   let revealPoint = 10;
-    //   if (textTop < windowHeight - revealPoint) {
-    //     img.classList.add("active");
-    //   } else {
-    //     img.classList.remove("active");
-    //   }
-    // },
   },
 };
 </script>
@@ -241,6 +235,7 @@ export default {
   flex-direction: column;
   align-items: center;
   position: relative;
+  overflow: hidden;
 }
 .home-bcg {
   position: absolute;
@@ -260,13 +255,12 @@ export default {
     0 0,
     43% 0
   );
-  background: rgb(77, 192, 181);
   background: linear-gradient(
     90deg,
-    $base-color 0%,
-    $base-color 20%,
-    rgba($base-color, 0.7735469188) 66%,
-    rgba($base-color, 0.8953956583) 100%
+    #8ed121 0%,
+    #8ed12100 20%,
+    rgb(142 209 33 / 0%) 66%,
+    rgba(142, 209, 33, 0.8953956583) 100%
   );
 
   top: 0;
@@ -289,7 +283,14 @@ export default {
     0 0,
     43% 0
   );
-  background-image: url("../assets/img/bcg-home11.jpg");
+  background-image: linear-gradient(
+      90deg,
+      $base-color 0%,
+      $base-color 20%,
+      rgba($base-color, 0.7735469188) 66%,
+      rgba($base-color, 0.8953956583) 100%
+    ),
+    url("../assets/img/bcg-home11.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   top: 0;
@@ -329,7 +330,7 @@ export default {
         width: 350px;
         align-self: center;
         border: 3px solid #fff;
-        background: none;
+        background: #8ed121;
         transition: background-color 0.3s;
         border-radius: 10px;
       }
@@ -352,9 +353,10 @@ export default {
 }
 .wrapper {
   display: flex;
-  width: 60vw;
+  width: 70vw;
   .description_card {
     display: flex;
+    flex-wrap: wrap;
     width: 100%;
     justify-content: space-around;
     margin: 100px 0;
@@ -365,7 +367,7 @@ export default {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin: 0 15px;
+      margin: 15px;
       background: #fff;
       transition: transform 0.3s;
       cursor: pointer;
@@ -384,13 +386,9 @@ export default {
     &-item:hover {
       transform: scale(1.05);
     }
-    &-item:nth-child(2) {
-      width: 110%;
-      height: 110%;
-      text-align: justify;
-    }
   }
 }
+
 .about {
   position: relative;
   width: 100vw;
@@ -411,6 +409,7 @@ export default {
     background: rgba(0, 0, 0, 0.578);
   }
   &-text {
+    flex: 0 1 100%;
     z-index: 10;
     color: #fff;
     font-size: 2rem;
@@ -427,53 +426,63 @@ export default {
   }
 
   &-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 1 100%;
     width: 100%;
     height: 100%;
     position: relative;
     transform: translateX(250px);
     opacity: 0;
     transition: all 1s ease;
+    img {
+      max-width: 100%;
+      height: 200%;
+    }
   }
   &-img.active {
     transform: translateX(0px);
     opacity: 1;
   }
-  &-img::before {
-    content: "";
-    width: 100%;
-    position: absolute;
-    height: 200%;
-    top: -50%;
-    left: 25%;
-    background-image: url("../assets/img/about-img.png");
-    background-size: contain;
-  }
 }
+
 .parallax-container {
   width: 100vw;
-  height: 440px;
+  height: 800px;
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  padding: 30px;
+
+  .parallax-background {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80%;
+  }
 
   .parallax {
-    width: 30vw;
+    width: 100%;
     height: 100%;
     position: relative;
 
     img {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
+      bottom: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 66%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      // object-fit: cover;
     }
   }
 }
-.parallax-container::before {
+.parallax-background::before {
   content: "";
   position: absolute;
   clip-path: polygon(0 21%, 100% 21%, 100% 100%, 0 100%);
@@ -492,7 +501,7 @@ export default {
   height: 100%;
   z-index: -10;
 }
-.parallax-container::after {
+.parallax-background::after {
   content: "";
   position: absolute;
   clip-path: polygon(0 21%, 100% 21%, 100% 100%, 0 100%);
@@ -513,14 +522,17 @@ export default {
   transform: translateY(100px);
   opacity: 0;
   transition: all 1s ease;
+  position: absolute;
+  bottom: 0;
 }
 .parralax-text.active {
   transform: translateY(0px);
   opacity: 1;
 }
+
 .footer {
   width: 100vw;
-  height: 150px;
+  // height: 150px;
   background: #000;
   color: #fff;
   font-size: 1.8rem;
@@ -547,4 +559,5 @@ export default {
     background: #000;
   }
 }
+@import "./src/assets/styles/rwd/home.scss";
 </style>

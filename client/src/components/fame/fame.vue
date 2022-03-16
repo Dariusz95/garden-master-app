@@ -1,38 +1,44 @@
 <template>
   <v-app>
     <div class="fame-container">
-      <div class="sort">
-        <span>Ranking pod względem</span>
-        <v-select
-          :items="fameSelect"
-          v-model="selected_ranking"
-          label="Wybierz"
-          solo
-        ></v-select>
-      </div>
+      <div class="fame">
+        <v-row class="sort">
+          <v-col cols="12" md="2" sm="4" xs="12">
+            <span>Ranking pod względem</span>
+          </v-col>
+          <v-col cols="12" md="4" sm="5" xs="12">
+            <v-select
+              :items="fameSelect"
+              v-model="selected_ranking"
+              label="Wybierz"
+              solo
+            ></v-select>
+          </v-col>
+        </v-row>
 
-      <ul v-if="selected_ranking === fameSelect[0]" class="famePlant-list">
-        <li v-for="(plant, index) in sortPlants" :key="index">
-          <famePlantCard :plant="plant" :index="index" />
-        </li>
-      </ul>
+        <ul v-if="selected_ranking === fameSelect[0]" class="famePlant-list">
+          <li v-for="(plant, index) in sortPlants" :key="index">
+            <famePlantCard :plant="plant" :index="index" />
+          </li>
+        </ul>
 
-      <ul v-if="selected_ranking === fameSelect[1]" class="fameUsers-list">
-        <li
-          class="user-item"
-          v-for="(user, index) in sortUsers"
-          :key="user._id"
-        >
-          <fameUserCard :user="user" :index="index" />
-        </li>
-      </ul>
-      <!-- <div class="fame-pagination">
+        <ul v-if="selected_ranking === fameSelect[1]" class="fameUsers-list">
+          <li
+            class="user-item"
+            v-for="(user, index) in sortUsers"
+            :key="user._id"
+          >
+            <fameUserCard :user="user" :index="index" />
+          </li>
+        </ul>
+        <!-- <div class="fame-pagination">
         <jw-pagination
           :pageSize="11"
           :items="isSelected"
           @changePage="onChangePage"
         ></jw-pagination>
       </div> -->
+      </div>
     </div>
   </v-app>
 </template>
@@ -104,13 +110,11 @@ export default {
 }
 .fame-container {
   display: flex;
-  min-height: 100vh;
   width: 100vw;
   align-items: center;
   flex-direction: column;
   background: #f6f6f6;
   padding-top: 100px;
-  // background-image: url("../assets/img/fame-bcg.jpg");
   background-image: linear-gradient(
       to right,
       rgb(75 75 75 / 30%),
@@ -119,11 +123,17 @@ export default {
     url("../../assets/img/fame-bcg.jpg");
   background-size: cover;
   background-attachment: fixed;
+
+  .fame {
+    margin: 0 auto;
+    width: 80vw;
+  }
 }
 .sort {
   display: flex;
+  // align-items: baseline;
   font-size: 2rem;
-  align-items: baseline;
+  justify-content: center;
   :first-child {
     margin-right: 10px;
   }
@@ -187,9 +197,10 @@ li {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  width: 75%;
+  // width: 75%;
   margin: 0;
   padding: 0;
+  justify-content: center;
 }
 
 .famePlant-list {
@@ -240,4 +251,5 @@ li {
     }
   }
 }
+@import "./src/assets/styles/rwd/fame.scss";
 </style>

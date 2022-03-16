@@ -2,7 +2,7 @@
   <v-app>
     <div class="plants-container">
       <v-row class="plants-filter">
-        <v-col cols="4">
+        <v-col cols="12" sm="6" md="6" lg="4">
           <v-select
             v-model="selected_type"
             :items="select_type"
@@ -10,7 +10,7 @@
             solo
           ></v-select>
         </v-col>
-        <v-col cols="4">
+        <v-col cols="12" sm="6" md="6" lg="4">
           <v-select
             :disabled="!selected_type"
             v-model="selected_kind"
@@ -19,7 +19,7 @@
             solo
           ></v-select>
         </v-col>
-        <v-col class="showPlantAmount" cols="4">
+        <v-col class="showPlantAmount" cols="12" sm="6" md="6" lg="4">
           <span class="showPlantAmount-text">Pokaż</span>
           <v-btn-toggle group mandatory>
             <v-btn @click="changeShowPages(4)"> 4 </v-btn>
@@ -27,13 +27,28 @@
             <v-btn @click="changeShowPages(12)"> 12 </v-btn>
           </v-btn-toggle>
         </v-col>
-        <v-col class="colBtn">
+        <v-col class="colBtn" cols="12">
           <button class="resetFiltersBtn" @click="resetFilters">
             Resetuj filtry
           </button>
         </v-col>
       </v-row>
-      <transition-group class="plants" tag="ul" name="fade-out-in">
+      <!-- <transition-group class="plants" tag="ul" name="fade-out-in"> -->
+      <!-- <v-row class="plants">
+        <v-col
+          class="plant d-flex flex-row"
+          v-for="(plant, index) in pageOfItems"
+          :key="plant._id"
+        >
+          <plant
+            :plant="plant"
+            :errLike="errLike"
+            @add-like="addLike"
+            :index="index"
+          />
+        </v-col>
+      </v-row> -->
+      <ul class="plants">
         <div
           class="plant d-flex flex-row"
           v-for="(plant, index) in pageOfItems"
@@ -43,11 +58,11 @@
             :plant="plant"
             :errLike="errLike"
             @add-like="addLike"
-            :successAddLike="successAddLike"
             :index="index"
           />
         </div>
-      </transition-group>
+      </ul>
+      <!-- </transition-group> -->
       <div class="plants-pagination">
         <jw-pagination
           :pageSize="pageSize"
@@ -71,6 +86,7 @@ export default {
   data() {
     return {
       componentReload: 0,
+      // plantReload: false,
       errLike: "",
       pageOfItems: [],
       select_type: ["Owoce", "Warzywa"],
@@ -116,13 +132,13 @@ export default {
     async changeShowPages(number) {
       this.pageSize = number;
       this.componentReload = !this.componentReload;
+      console.log(this.pageOfItems);
     },
     resetFilters() {
       (this.selected_type = ""), (this.selected_kind = "");
     },
 
     async addLike(id) {
-      console.log(id);
       try {
         var self = this;
         await http
@@ -132,8 +148,7 @@ export default {
           .then(function (response) {
             if (response.status == 200) {
               console.log("success", response.status);
-              self.successAddLike = true;
-              this.successAddLike = true;
+              self.fetchPlants();
             }
           })
           .catch(function (error) {
@@ -166,7 +181,7 @@ export default {
   background-repeat: no-repeat;
   background-position: bottom;
   min-height: calc(130vh - 80px);
-  padding: 20px;
+  padding: 45px 20px;
 
   border: 1;
   .row {
@@ -175,6 +190,7 @@ export default {
 }
 .plants-filter {
   font-size: 1.6rem;
+  justify-content: center;
   .v-text-field__details {
     display: none;
   }
@@ -229,17 +245,16 @@ export default {
       }
     }
   }
-}
-
-.plant {
-  flex: 0 1 calc(25% - 20px);
-  position: relative;
-  height: 400px;
-  margin: 0 5px;
-  border-radius: 15px;
-  overflow: hidden;
-  margin: 10px 10px;
-  box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+  .plant {
+    flex: 0 1 calc(25% - 20px);
+    position: relative;
+    height: 400px;
+    margin: 0 5px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 10px 10px;
+    box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+  }
 }
 
 .fade-out-in-enter-active,
@@ -255,4 +270,5 @@ export default {
 .fade-out-in-leave-to {
   opacity: 0;
 }
+@import "./src/assets/styles/rwd/plants.scss";
 </style>

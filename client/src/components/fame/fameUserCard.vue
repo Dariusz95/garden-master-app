@@ -38,7 +38,7 @@ export default {
       // console.log("index", this.index);
       // console.log(![0, 1, 2].indexOf(this.index) < 0);
       return {
-        active: [0, 1, 2].indexOf(this.index) < 0,
+        podium: [0, 1, 2].indexOf(this.index) < 0,
       };
     },
     addingPlantAmount() {
@@ -65,7 +65,7 @@ export default {
 
 <style lang="scss">
 @import "./src/assets/styles/_main.scss";
-.active.user-card {
+.podium.user-card {
   height: 200px;
   display: flex;
   flex-direction: row;

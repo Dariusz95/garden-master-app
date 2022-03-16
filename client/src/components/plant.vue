@@ -6,11 +6,17 @@
     <div class="plant__describe">
       <div class="plant__describe_like">
         <div class="plant__describe_like-item">
-          <span>{{ amountLikes }}</span>
+          <span>{{ this.plant.like.length }}</span>
           <span>ilość polubień</span>
         </div>
         <div class="plant__describe_like-item">
-          <i class="fas fa-thumbs-up" @click="likeUp(plant._id, $event)"> </i>
+          <v-icon v-if="!isLiked" @click="likeUp(plant._id, $event)"
+            >mdi-thumb-up-outline</v-icon
+          >
+          <v-icon v-if="isLiked" @click="likeUp(plant._id, $event)"
+            >mdi-thumb-up</v-icon
+          >
+          <!-- <i class="fas fa-thumbs-up" @click="likeUp(plant._id, $event)"> </i> -->
 
           <span>Polub to</span>
         </div>
@@ -47,23 +53,18 @@ export default {
       type: String,
       required: true,
     },
-    successAddLike: {
-      type: Boolean,
-    },
-    // index,
   },
   computed: {
+    ...mapGetters({ currentUser: "getCurrentUser" }),
     getImgUrl() {
       return `${API_URL}/images/${this.plant.image}`;
     },
-    amountLikes() {
-      if (this.successAddLike) {
-        console.log("success likes");
-        if (this.plant._id === this.clickedId) {
-          return this.plant.like.length + 1;
-        }
+    isLiked() {
+      if (this.plant.like.includes(this.currentUser.id)) {
+        return true;
+      } else {
+        return false;
       }
-      return this.plant.like.length;
     },
   },
   methods: {
@@ -178,8 +179,9 @@ export default {
         border-left: 1px solid black;
         border-right: 1px solid black;
         transition: color 0.3s;
-        .fas {
-          font-size: 3rem;
+        .v-icon {
+          font-size: 3.5rem;
+          color: $base-color;
           position: relative;
         }
         span:last-child {

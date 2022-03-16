@@ -4,7 +4,7 @@
       class="login-page position-relative d-flex justify-content-evenly align-items-center"
     >
       <div class="login-img"></div>
-      <img src="../assets/img/wave.png" alt="" srcset="" />
+      <img src="../assets/img/png-wave.png" alt="" srcset="" />
 
       <form class="login-form">
         <img src="../assets/img/logo-login.png" alt="" srcset="" />
@@ -100,7 +100,7 @@ export default {
   > img {
     position: fixed;
     left: -17px;
-    bottom: 0;
+    bottom: -35%;
     z-index: -10;
     height: 100vh;
   }
@@ -165,4 +165,5 @@ export default {
     }
   }
 }
+@import "./src/assets/styles/rwd/login.scss";
 </style>

@@ -1,0 +1,38 @@
+@media screen and (max-width: 1200px) {
+  .plants-container {
+    width: 90%;
+  }
+  .plants .plant {
+    flex: 0 1 calc(25% - 20px);
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .plants .plant {
+    flex: 0 1 calc(50% - 20px);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .plants-pagination {
+    margin: 5rem;
+    font-size: 1.8rem;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .plants-container {
+    width: 95%;
+  }
+  .plants .plant {
+    flex: 0 1 100%;
+  }
+
+  .plants-pagination {
+    .pagination {
+      .page-item > .page-link {
+        padding: 6px 7px;
+      }
+    }
+  }
+}

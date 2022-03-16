@@ -233,8 +233,8 @@ export default {
   padding: 30px 10px 10px;
   color: #fff;
   background: #000000;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
+  // border-top-left-radius: 15px;
+  // border-top-right-radius: 15px;
   &-item {
     position: relative;
     display: flex;
